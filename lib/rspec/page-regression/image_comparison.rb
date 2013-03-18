@@ -51,20 +51,20 @@ module RSpec::PageRegression
       ymin = @itest.height + 1
       ymax = -1
       @itest.height.times do |y|
-        @itest.row(y).each_with_index do |pixel, x|
-          if @itest[x,y] != idiff[x,y]
-            xmin = x if x < xmin
-            xmax = x if x > xmax
-            ymin = y if y < ymin
-            ymax = y if y > ymax
-            idiff[x,y] = rgb(
-              r(pixel) + r(idiff[x,y]) - 2 * [r(pixel), r(idiff[x,y])].min,
-              g(pixel) + g(idiff[x,y]) - 2 * [g(pixel), g(idiff[x,y])].min,
-              b(pixel) + b(idiff[x,y]) - 2 * [b(pixel), b(idiff[x,y])].min
-            )
-          else
-            idiff[x,y] = rgb(0,0,0)
-          end
+        @itest.row(y).each_with_index do |test_pixel, x|
+          idiff[x,y] = if test_pixel != (expected_pixel = idiff[x,y])
+                         xmin = x if x < xmin
+                         xmax = x if x > xmax
+                         ymin = y if y < ymin
+                         ymax = y if y > ymax
+                         rgb(
+                           (r(test_pixel) - r(expected_pixel)).abs,
+                           (g(test_pixel) - g(expected_pixel)).abs,
+                           (b(test_pixel) - b(expected_pixel)).abs
+                         )
+                       else
+                         rgb(0,0,0)
+                       end
         end
       end
 
