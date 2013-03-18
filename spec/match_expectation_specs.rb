@@ -61,6 +61,7 @@ describe "match_expectation" do
       Then { @error.should_not be_nil }
       Then { @error.message.should include "Missing expectation image #{expected_path}" }
       Then { @error.message.should =~ viewer_pattern(test_path) }
+      Then { @error.message.should include "mkdir -p #{expected_path.dirname} && cp #{test_path} #{expected_path}" }
     end
 
     context "when sizes mismatch" do

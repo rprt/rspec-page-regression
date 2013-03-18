@@ -16,10 +16,17 @@ module RSpec::PageRegression
             when :missing_expected then "Missing expectation image #{@filepaths.expected_image}"
             when :missing_test then "Missing test image #{@filepaths.test_image}"
             when :size_mismatch then "Test image size #{@comparison.test_size.join('x')} does not match expectation #{@comparison.expected_size.join('x')}"
-            else "Test image does not match expected image"
+            when :difference then "Test image does not match expected image"
             end
 
-      msg += "\n$ #{viewer} #{@filepaths.all.select(&:exist?).join(' ')}"
+      msg += "\n    $ #{viewer} #{@filepaths.all.select(&:exist?).join(' ')}"
+
+      case @comparison.result
+      when :missing_expected
+        msg += "\nCreate it via:\n    $ mkdir -p #{@filepaths.expected_image.dirname} && cp #{@filepaths.test_image} #{@filepaths.expected_image}"
+      end
+
+      msg
     end
 
     failure_message_for_should_not do |page|
