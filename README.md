@@ -17,12 +17,12 @@ And in your spec_helper:
     require 'rspec'
     require 'rspec/page-regression'
 
-Rspec-page-regression presupposes that your spec files are under a directory named `spec`, which can have a sibling directory `tmp`.
+Rspec-page-regression presupposes the convention that your spec files are under a directory named `spec` (checked in to your repo), with a sibling directory `tmp` (.gitignore'd)
 
 ## Usage
 
 Rspec-page-regression provides a matcher that renders the page and compares
-the image against an expected image.  To use it, you need to enable
+the resulting image against an expected image.  To use it, you need to enable
 Capybara and Poltergeist by specifying `:type => :feature` and `:js => true`:
 
     describe "my page", :type => :feature, :js => true do
@@ -62,15 +62,23 @@ The easiest way to create an expected image is to run the test for the first tim
 
 First view the image to make sure it really is what you expect.  Then copy and past the last line to install it.  (And then of course commit it into your repository.)
 
+### How do you update expectation images?
+
+If you've deliberatly changed something that affects the look of your web page, then your regression test will fail.  The "test" image will contain the new look, and the "expected" image will contain the old.
+
+Once you've visually checked the test image to make sure it's really what you want, then simply copy the test image over the old expected image.  (And then of course commit it it into your repository.)
+
+The failure message doesn't include a ready-to-copy-and-paste `$ cp` command, but you can copy and past the individual file paths from the "does not match" message.  (The reason not to have a ready-to-copy-and-paste command is that in most cases the failure will be real, and it shouldn't be too easy to mindlessly copy and past to make it go away.)
+
 ### Where are the expectation images?
 
-As per the above examples, the expectation images default to being stored under `spec/expectation`, with the remainder of the path constructed from the example group descriptions. (If the`it` also has a description it will be used as well.)
+As per the above examples, the expectation images default to being stored under `spec/expectation`, with the remainder of the path constructed from the example group descriptions. (If the `it` also has a description it will be used as well.)
 
 If that default scheme doesn't suit you, you can pass a path to where the expectation image should be found:
 
     page.should match_expectation "/path/to/my/file.png"
 
-Everything else will work normally
+Everything else will work normally, and the failure messages will refer to your path.
 
 ## Configuration
 
@@ -91,6 +99,7 @@ Contributions are welcome!  As usual, here's the drill:
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Don't forget to include specs (`rake spec`).  Code coverage should be 100%
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+Don't forget to include specs (`rake spec`)!  Code coverage should be 100%
