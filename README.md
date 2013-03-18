@@ -2,7 +2,7 @@
 
 Rspec-page-regression is an [RSpec](https://github.com/rspec/rspec) plugin
 that makes it easy to regression test your web application pages, to make
-sure the pages look continue to look the way you expect them to look.
+sure the pages continue to look the way you expect them to look.
 
 ## Installation
 
