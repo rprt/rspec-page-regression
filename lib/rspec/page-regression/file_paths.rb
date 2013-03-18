@@ -18,13 +18,14 @@ module RSpec::PageRegression
       }xi
       canonical_path = descriptions.map{|s| s.parameterize('_')}.inject(Pathname.new(""), &:+)
 
-      expected_root = Pathname.new(example.metadata[:file_path]).realpath.dirname + "expectation"
-      tmp_root = expected_root.sub %r{\bspec\b}, "tmp/spec"
+      app_root = Pathname.new(example.metadata[:file_path]).realpath.each_filename.take_while{|c| c != "spec"}.inject(Pathname.new("/"), &:+)
+      expected_root = app_root + "spec" + "expectation"
+      test_root = app_root + "tmp" + "spec" + "expectation"
       cwd = Pathname.getwd
 
       @expected_image = expected_path || (expected_root + canonical_path + "expected.png").relative_path_from(cwd)
-      @test_image = (tmp_root + canonical_path + "test.png").relative_path_from cwd
-      @difference_image = (tmp_root + canonical_path + "difference.png").relative_path_from cwd
+      @test_image = (test_root + canonical_path + "test.png").relative_path_from cwd
+      @difference_image = (test_root + canonical_path + "difference.png").relative_path_from cwd
     end
 
     def all
