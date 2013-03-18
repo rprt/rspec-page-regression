@@ -1,0 +1,5 @@
+rvm:
+  - 1.9.3
+notifications:
+  recipients:
+    - ronen@barzel.org
