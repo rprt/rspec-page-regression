@@ -4,6 +4,8 @@ Rspec-page-regression is an [RSpec](https://github.com/rspec/rspec) plugin
 that makes it easy to regression test your web application pages, to make
 sure the pages continue to look the way you expect them to look.
 
+[<img src="https://secure.travis-ci.org/ronen/rspec-page-regression.png"/>](http://travis-ci.org/ronen/rspec-page-regression)[<img src="https://gemnasium.com/ronen/rspec-page-regression.png" alt="Dependency Status" />](https://gemnasium.com/ronen/rspec-page-regression)
+
 ## Installation
 
 Rspec-page-regression uses [PhantomJS](http://www.phantomjs.org/) to render web page snapshots, by virtue of the [Poltergeist](https://github.com/jnicklas/capybara) driver for [Capybara](https://github.com/jnicklas/capybara).  Assuming you have those installed and ready to go...
