@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["ronen@barzel.org"]
   spec.summary       = %q{Web page rendering (html, css, and javascript) regression for RSpec}
   spec.description   = %q{Rspec-page-regression provides a mechanism for regression testing of web page renders in RSpec.  It takes into account html, css, and javascript, by virtue of using phantomjs (via the poltergeist gem) to render snapshots.  It provides an RSpec matcher that compares the test snapshot to an expected image, and facilitates management of the images.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/ronen/rspec-page-regression"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
