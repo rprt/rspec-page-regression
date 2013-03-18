@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = RSpec::PageRegression::VERSION
   spec.authors       = ["ronen barzel"]
   spec.email         = ["ronen@barzel.org"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.summary       = %q{Web page rendering (html, css, and javascript) regression}
+  spec.description   = %q{RSpec::PageRegression provides a mechanism for regression testing web page renders.  It takes into account html, css, and javascript, by virtue of using phantomjs (via the poltergeist gem) to render snapshots.  It provides an rspec matcher that compares the test snapshot to an expected image.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
