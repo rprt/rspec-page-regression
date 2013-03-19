@@ -55,22 +55,22 @@ It also shows a "difference image" in which each pixel contains the per-channel 
 
 ### How do you create expectation images?
 
-The easiest way to create an expected image is to run the test for the first time and let it fail.  You'll then get a failure message like:
+The easiest way to create an expectation image is to run the test for the first time and let it fail.  You'll then get a failure message like:
 
     Missing expectation image spec/expectation/my_page/popup_help/expected.png
         $ open tmp/spec/expectation/my_page/popup_help/test.png
     To create it:
         $ mkdir -p spec/expectation/my_page/popup_help && cp tmp/spec/expectation/my_page/popup_help/test.png spec/expectation/my_page/popup_help/expected.png
 
-First view the image to make sure it really is what you expect.  Then copy and past the last line to install it.  (And then of course commit it into your repository.)
+First view the image to make sure it really is what you expect.  Then copy and paste the last line to install it.  (And then of course commit it into your repository.)
 
 ### How do you update expectation images?
 
 If you've deliberatly changed something that affects the look of your web page, then your regression test will fail.  The "test" image will contain the new look, and the "expected" image will contain the old.
 
-Once you've visually checked the test image to make sure it's really what you want, then simply copy the test image over the old expected image.  (And then of course commit it it into your repository.)
+Once you've visually checked the test image to make sure it's really what you want, then simply copy the test image over the old expectation image.  (And then of course commit it it into your repository.)
 
-The failure message doesn't include a ready-to-copy-and-paste `$ cp` command, but you can copy and past the individual file paths from the "does not match" message.  (The reason not to have a ready-to-copy-and-paste command is that in most cases the failure will be real, and it shouldn't be too easy to mindlessly copy and past to make it go away.)
+The failure message doesn't include a ready-to-copy-and-paste `$ cp` command, but you can copy and paste the individual file paths from the "does not match" message.  (The reason not to have a ready-to-copy-and-paste command is if the failure is real, it shouldn't be too easy to mindlessly copy and paste to make it go away.)
 
 ### Where are the expectation images?
 
@@ -80,7 +80,7 @@ If that default scheme doesn't suit you, you can pass a path to where the expect
 
     page.should match_expectation "/path/to/my/file.png"
 
-Everything else will work normally, and the failure messages will refer to your path.
+Everything will work normally, and the failure messages will refer to your path.
 
 ## Configuration
 
@@ -104,4 +104,4 @@ Contributions are welcome!  As usual, here's the drill:
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
-Don't forget to include specs (`rake spec`)!  Code coverage should be 100%
+Don't forget to include specs (`rake spec`) to verify your functionality.  Code coverage should be 100%
