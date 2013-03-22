@@ -1,16 +1,19 @@
 # rspec-page-regression
 
 Rspec-page-regression is an [RSpec](https://github.com/rspec/rspec) plugin
-that makes it easy to regression test your web application pages, to make
-sure the pages continue to look the way you expect them to look.
+that makes it easy to headlessly regression test your web application pages to make sure the pages continue to look the way you expect them to look, taking into account HTML, CSS, and JavaScript.
+
+It provides an RSpec matcher that compares the test snapshot to an expected image, and facilitates management of the images.
+
+Rspec-page-regression uses [PhantomJS](http://www.phantomjs.org/) to headlessly render web page snapshots, by virtue of the [Poltergeist](https://github.com/jonleighton/poltergeist) driver for [Capybara](https://github.com/jnicklas/capybara).  
+
 
 [<img src="https://secure.travis-ci.org/ronen/rspec-page-regression.png"/>](http://travis-ci.org/ronen/rspec-page-regression)[<img src="https://gemnasium.com/ronen/rspec-page-regression.png" alt="Dependency Status" />](https://gemnasium.com/ronen/rspec-page-regression)
 
 ## Installation
 
-Rspec-page-regression uses [PhantomJS](http://www.phantomjs.org/) to render web page snapshots, by virtue of the [Poltergeist](https://github.com/jonleighton/poltergeist) driver for [Capybara](https://github.com/jnicklas/capybara).  
 
-Install PhantomJS as per [PhantomJS Download and Install](http://phantomjs.org/download.html) or [Poltergeist: Installing PhantomJS](https://github.com/jonleighton/poltergeist#installing-phantomjs).  There are *no other external dependencies* (no need for Qt, nor an X server, nor ImageMagick, etc.)
+Install PhantomJS as per [PhantomJS: Download and Install](http://phantomjs.org/download.html) and/or [Poltergeist: Installing PhantomJS](https://github.com/jonleighton/poltergeist#installing-phantomjs).  There are no other external dependencies (no need for Qt, nor an X server, nor ImageMagick, etc.)
 
 In your Gemfile:
 
@@ -77,7 +80,7 @@ If you've deliberatly changed something that affects the look of your web page, 
 
 Once you've visually checked the test image to make sure it's really what you want, then simply copy the test image over the old expectation image.  (And then of course commit it it into your repository.)
 
-The failure message doesn't include a ready-to-copy-and-paste `cp` command, but you can copy and paste the individual file paths from the "does not match" message.  (The reason not to have a ready-to-copy-and-paste command is if the failure is real, it shouldn't be too easy to mindlessly copy and paste to make it go away.)
+The failure message doesn't include a ready-to-copy-and-paste `cp` command, but you can copy and paste the individual file paths from the message.  (The reason not to have a ready-to-copy-and-paste command is if the failure is real, it shouldn't be too easy to mindlessly copy and paste to make it go away.)
 
 ### Where are the expectation images?
 
