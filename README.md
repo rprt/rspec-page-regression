@@ -1,16 +1,17 @@
+
+[![Gem Version](https://badge.fury.io/rb/rspec-page-regression.png)](http://badge.fury.io/rb/rspec-page-regression)
+[![Build Status](https://secure.travis-ci.org/ronen/rspec-page-regression.png)](http://travis-ci.org/ronen/rspec-page-regression) 
+[![Dependency Status](https://gemnasium.com/ronen/rspec-page-regression.png)](https://gemnasium.com/ronen/rspec-page-regression)
+
 # rspec-page-regression
+
 
 Rspec-page-regression is an [RSpec](https://github.com/rspec/rspec) plugin
 that makes it easy to headlessly regression test your web application pages to make sure the pages continue to look the way you expect them to look, taking into account HTML, CSS, and JavaScript.
 
 It provides an RSpec matcher that compares the test snapshot to an expected image, and facilitates management of the images.
 
-Rspec-page-regression uses [PhantomJS](http://www.phantomjs.org/) to headlessly render web page snapshots, by virtue of the [Poltergeist](https://github.com/jonleighton/poltergeist) driver for [Capybara](https://github.com/jnicklas/capybara).  
-
-
-[![Gem Version](https://badge.fury.io/rb/rspec-page-regression.png)](http://badge.fury.io/rb/rspec-page-regression)
-[![Build Status](https://secure.travis-ci.org/ronen/rspec-page-regression.png)](http://travis-ci.org/ronen/rspec-page-regression) 
-[![Dependency Status](https://gemnasium.com/ronen/rspec-page-regression.png)](https://gemnasium.com/ronen/rspec-page-regression)
+Rspec-page-regression uses [PhantomJS](http://www.phantomjs.org/) to headlessly render web page snapshots, by virtue of the [Poltergeist](https://github.com/jonleighton/poltergeist) driver for [Capybara](https://github.com/jnicklas/capybara).
 
 
 ## Installation
