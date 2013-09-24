@@ -53,6 +53,10 @@ describe "match_expectation" do
       Then { @error.should_not be_nil }
       Then { @error.message.should include "Missing test image #{test_path}" }
       Then { @error.message.should =~ viewer_pattern(expected_path) }
+      context "with previously-created difference image" do
+        Given { preexisting_difference_image }
+        Then { difference_path.should_not be_exist }
+      end
     end
 
     context "when expected image is missing" do
@@ -62,6 +66,10 @@ describe "match_expectation" do
       Then { @error.message.should include "Missing expectation image #{expected_path}" }
       Then { @error.message.should =~ viewer_pattern(test_path) }
       Then { @error.message.should include "mkdir -p #{expected_path.dirname} && cp #{test_path} #{expected_path}" }
+      context "with previously-created difference image" do
+        Given { preexisting_difference_image }
+        Then { difference_path.should_not be_exist }
+      end
     end
 
     context "when sizes mismatch" do
@@ -71,11 +79,19 @@ describe "match_expectation" do
       Then { @error.should_not be_nil }
       Then { @error.message.should include "Test image size 256x167 does not match expectation 512x334" }
       Then { @error.message.should =~ viewer_pattern(test_path, expected_path) }
+      context "with previously-created difference image" do
+        Given { preexisting_difference_image }
+        Then { difference_path.should_not be_exist }
+      end
     end
 
     context "with match argument" do
       Given { @match_argument = "/this/is/a/test.png" }
       Then { @error.message.should include "Missing expectation image /this/is/a/test.png" }
+      context "with previously-created difference image" do
+        Given { preexisting_difference_image }
+        Then { difference_path.should_not be_exist }
+      end
     end
 
     context "with trivial example description" do
@@ -135,12 +151,20 @@ describe "match_expectation" do
     FileUtils.cp fixture_image(name), path
   end
 
+  def create_existing_difference_image
+  end
+
   def use_test_image(name)
     use_fixture_image(name, test_path)
   end
 
   def use_expected_image(name)
     use_fixture_image(name, expected_path)
+  end
+
+  def preexisting_difference_image
+    difference_path.dirname.mkpath unless difference_path.dirname.exist?
+    FileUtils.touch difference_path
   end
 
   def viewer_pattern(*paths)

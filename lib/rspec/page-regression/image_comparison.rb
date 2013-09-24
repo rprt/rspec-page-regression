@@ -23,6 +23,8 @@ module RSpec::PageRegression
     private
 
     def compare
+      @filepaths.difference_image.unlink if @filepaths.difference_image.exist?
+
       return :missing_expected unless @filepaths.expected_image.exist?
       return :missing_test unless @filepaths.test_image.exist?
 
