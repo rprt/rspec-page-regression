@@ -8,7 +8,10 @@ It provides an RSpec matcher that compares the test snapshot to an expected imag
 Rspec-page-regression uses [PhantomJS](http://www.phantomjs.org/) to headlessly render web page snapshots, by virtue of the [Poltergeist](https://github.com/jonleighton/poltergeist) driver for [Capybara](https://github.com/jnicklas/capybara).  
 
 
-[<img src="https://secure.travis-ci.org/ronen/rspec-page-regression.png"/>](http://travis-ci.org/ronen/rspec-page-regression)[<img src="https://gemnasium.com/ronen/rspec-page-regression.png" alt="Dependency Status" />](https://gemnasium.com/ronen/rspec-page-regression)
+[![Gem Version](https://badge.fury.io/rb/rspec-page-regression.png)](http://badge.fury.io/rb/rspec-page-regression)
+[![Build Status](https://secure.travis-ci.org/ronen/rspec-page-regression.png)](http://travis-ci.org/ronen/rspec-page-regression) 
+[![Dependency Status](https://gemnasium.com/ronen/rspec-page-regression.png)](https://gemnasium.com/ronen/rspec-page-regression)
+
 
 ## Installation
 
@@ -115,3 +118,5 @@ Contributions are welcome!  As usual, here's the drill:
 5. Create new Pull Request
 
 Don't forget to include specs (`rake spec`) to verify your functionality.  Code coverage should be 100%
+
+## History
