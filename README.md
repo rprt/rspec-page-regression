@@ -120,3 +120,7 @@ Contributions are welcome!  As usual, here's the drill:
 Don't forget to include specs (`rake spec`) to verify your functionality.  Code coverage should be 100%
 
 ## History
+
+Release Notes:
+
+* 0.1.2 - Remove existing difference images so they won't be shown in cases where files couldn't be differenced.
