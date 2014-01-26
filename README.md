@@ -125,3 +125,7 @@ Don't forget to include specs (`rake spec`) to verify your functionality.  Code 
 Release Notes:
 
 * 0.1.2 - Remove existing difference images so they won't be shown in cases where files couldn't be differenced.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ronen/rspec-page-regression/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
