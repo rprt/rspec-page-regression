@@ -107,6 +107,26 @@ The default window size for the renders is 1024 x 768 pixels.  You can specify a
 
 Note that this specifies the size of the browser window viewport; but rspec-page-regression requests a render of the full page, which might extend beyond the window.  So the rendered file dimensions may be larger than this configuration value.
 
+### Using the selenium driver
+
+You can also use the selenium driver with capybara. This offers the possiblity to visually test your pages against a range of real browsers. 
+
+Add the [selenium-webdriver](https://rubygems.org/gems/selenium-webdriver) to your Gemfile:
+
+    gem 'selenium-webdriver'
+
+And in your spec_helper replace:
+
+    require 'capybara/poltergeist'
+    Capybara.javascript_driver = :poltergeist
+
+With:
+
+    require 'selenium/webdriver'
+    Capybara.javascript_driver = :selenium
+
+
+See also the [capybara readme](https://github.com/jnicklas/capybara#selenium) and [selenium wiki](https://code.google.com/p/selenium/wiki/RubyBindings) for more information.
 
 ## Contributing
 
