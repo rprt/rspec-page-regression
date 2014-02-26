@@ -7,7 +7,7 @@ describe "match_expectation" do
     @opts = { :full => true }
     @driver = mock("Driver")
     @driver.stubs :resize
-    @driver.stubs :render
+    @driver.stubs :save_screenshot
     @page = mock("Page")
     @page.stubs(:driver).returns @driver
     @match_argument = nil
@@ -25,7 +25,22 @@ describe "match_expectation" do
 
     context "framework" do
       Then { @driver.should have_received(:resize).with(1024, 768) }
-      Then { @driver.should have_received(:render).with(test_path, @opts) }
+      Then { @driver.should have_received(:save_screenshot).with(test_path, @opts) }
+
+      context "selenium" do
+        Given {
+          @browser = mock("Browser")
+          @window = mock("Window")
+          @window.stubs(:resize_to)
+          manage = mock("Manage")
+          manage.stubs(:window).returns @window
+          @browser.stubs(:manage => manage)
+          @driver.stubs(:browser => @browser)
+          @driver.unstub(:resize)
+        }
+
+        Then { @window.should have_received(:resize_to).with(1024, 768) }
+      end
     end
 
     context "when files match" do
@@ -102,7 +117,7 @@ describe "match_expectation" do
           example_group: { description: "parent" }
         }
       end
-      Then { @driver.should have_received(:render).with(Pathname.new("tmp/spec/expectation/parent/test.png"), @opts) }
+      Then { @driver.should have_received(:save_screenshot).with(Pathname.new("tmp/spec/expectation/parent/test.png"), @opts) }
       Then { @error.message.should include "Missing expectation image spec/expectation/parent/expected.png" }
     end
 
