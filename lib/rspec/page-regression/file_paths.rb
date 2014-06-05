@@ -9,7 +9,7 @@ module RSpec::PageRegression
     def initialize(example, expected_path = nil)
       expected_path = Pathname.new(expected_path) if expected_path
 
-      descriptions = description_ancestry(example.metadata)
+      descriptions = description_ancestry(example.metadata[:example_group])
       descriptions.pop if descriptions.last =~ %r{
         ^
         (then_+)? (page_+)? (should_+)? match_expectation
@@ -37,7 +37,7 @@ module RSpec::PageRegression
 
     def description_ancestry(metadata)
       return [] if metadata.nil?
-      description_ancestry(metadata[:example_group]) << metadata[:description].parameterize("_")
+      description_ancestry(metadata[:parent_example_group]) << metadata[:description].parameterize("_")
     end
   end
 end

@@ -13,19 +13,19 @@ describe "match_expectation" do
     @match_argument = nil
   }
 
-  context "using should" do
+  context "using expect().to" do
 
     When {
       begin
-        @page.should match_expectation @match_argument
+        expect(@page).to match_expectation @match_argument
       rescue RSpec::Expectations::ExpectationNotMetError => e
         @error = e
       end
     }
 
     context "framework" do
-      Then { @driver.should have_received(:resize).with(1024, 768) }
-      Then { @driver.should have_received(:save_screenshot).with(test_path, @opts) }
+      Then { expect(@driver).to have_received(:resize).with(1024, 768) }
+      Then { expect(@driver).to have_received(:save_screenshot).with(test_path, @opts) }
 
       context "selenium" do
         Given {
@@ -39,7 +39,7 @@ describe "match_expectation" do
           @driver.unstub(:resize)
         }
 
-        Then { @window.should have_received(:resize_to).with(1024, 768) }
+        Then { expect(@window).to have_received(:resize_to).with(1024, 768) }
       end
     end
 
@@ -47,7 +47,7 @@ describe "match_expectation" do
       Given { use_test_image "A" }
       Given { use_expected_image "A" }
 
-      Then { @error.should be_nil }
+      Then { expect(@error).to be_nil }
     end
 
 
@@ -55,35 +55,35 @@ describe "match_expectation" do
       Given { use_test_image "A" }
       Given { use_expected_image "B" }
 
-      Then { @error.should_not be_nil }
-      Then { @error.message.should include "Test image does not match expected image" }
-      Then { @error.message.should =~ viewer_pattern(test_path, expected_path, difference_path) }
+      Then { expect(@error).to_not be_nil }
+      Then { expect(@error.message).to include "Test image does not match expected image" }
+      Then { expect(@error.message).to match viewer_pattern(test_path, expected_path, difference_path) }
 
-      Then { difference_path.read.should == fixture_image("ABdiff").read }
+      Then { expect(difference_path.read).to eq fixture_image("ABdiff").read }
     end
 
     context "when test image is missing" do
       Given { use_expected_image "A" }
 
-      Then { @error.should_not be_nil }
-      Then { @error.message.should include "Missing test image #{test_path}" }
-      Then { @error.message.should =~ viewer_pattern(expected_path) }
+      Then { expect(@error).to_not be_nil }
+      Then { expect(@error.message).to include "Missing test image #{test_path}" }
+      Then { expect(@error.message).to match viewer_pattern(expected_path) }
       context "with previously-created difference image" do
         Given { preexisting_difference_image }
-        Then { difference_path.should_not be_exist }
+        Then { expect(difference_path).to_not be_exist }
       end
     end
 
     context "when expected image is missing" do
       Given { use_test_image "A" }
 
-      Then { @error.should_not be_nil }
-      Then { @error.message.should include "Missing expectation image #{expected_path}" }
-      Then { @error.message.should =~ viewer_pattern(test_path) }
-      Then { @error.message.should include "mkdir -p #{expected_path.dirname} && cp #{test_path} #{expected_path}" }
+      Then { expect(@error).to_not be_nil }
+      Then { expect(@error.message).to include "Missing expectation image #{expected_path}" }
+      Then { expect(@error.message).to match viewer_pattern(test_path) }
+      Then { expect(@error.message).to include "mkdir -p #{expected_path.dirname} && cp #{test_path} #{expected_path}" }
       context "with previously-created difference image" do
         Given { preexisting_difference_image }
-        Then { difference_path.should_not be_exist }
+        Then { expect(difference_path).to_not be_exist }
       end
     end
 
@@ -91,21 +91,21 @@ describe "match_expectation" do
       Given { use_test_image "Small" }
       Given { use_expected_image "A" }
 
-      Then { @error.should_not be_nil }
-      Then { @error.message.should include "Test image size 256x167 does not match expectation 512x334" }
-      Then { @error.message.should =~ viewer_pattern(test_path, expected_path) }
+      Then { expect(@error).to_not be_nil }
+      Then { expect(@error.message).to include "Test image size 256x167 does not match expectation 512x334" }
+      Then { expect(@error.message).to match viewer_pattern(test_path, expected_path) }
       context "with previously-created difference image" do
         Given { preexisting_difference_image }
-        Then { difference_path.should_not be_exist }
+        Then { expect(difference_path).to_not be_exist }
       end
     end
 
     context "with match argument" do
       Given { @match_argument = "/this/is/a/test.png" }
-      Then { @error.message.should include "Missing expectation image /this/is/a/test.png" }
+      Then { expect(@error.message).to include "Missing expectation image /this/is/a/test.png" }
       context "with previously-created difference image" do
         Given { preexisting_difference_image }
-        Then { difference_path.should_not be_exist }
+        Then { expect(difference_path).to_not be_exist }
       end
     end
 
@@ -113,12 +113,12 @@ describe "match_expectation" do
       Given do
         RSpec::Core::Example.any_instance.stubs :metadata => {
           file_path: __FILE__,
-          description: "Then page.should match_expectation",
+          description: "Then expect(page).to match_expectation",
           example_group: { description: "parent" }
         }
       end
-      Then { @driver.should have_received(:save_screenshot).with(Pathname.new("tmp/spec/expectation/parent/test.png"), @opts) }
-      Then { @error.message.should include "Missing expectation image spec/expectation/parent/expected.png" }
+      Then { expect(@driver).to have_received(:save_screenshot).with(Pathname.new("tmp/spec/expectation/parent/test.png"), @opts) }
+      Then { expect(@error.message).to include "Missing expectation image spec/expectation/parent/expected.png" }
     end
 
     context "with page size configuration" do
@@ -127,15 +127,15 @@ describe "match_expectation" do
           config.page_size = [123, 456]
         end
       end
-      Then { @driver.should have_received(:resize).with(123, 456) }
+      Then { expect(@driver).to have_received(:resize).with(123, 456) }
     end
 
   end
 
-  context "using should_not" do
+  context "using expect().to_not" do
     When {
       begin
-        @page.should_not match_expectation
+        expect(@page).to_not match_expectation
       rescue RSpec::Expectations::ExpectationNotMetError => e
         @error = e
       end
@@ -145,15 +145,15 @@ describe "match_expectation" do
       Given { use_test_image "A" }
       Given { use_expected_image "B" }
 
-      Then { @error.should be_nil }
+      Then { expect(@error).to be_nil }
     end
 
     context "when files match" do
       Given { use_test_image "A" }
       Given { use_expected_image "A" }
 
-      Then { @error.should_not be_nil }
-      Then { @error.message.should == "Test image should not match expectation image" }
+      Then { expect(@error).to_not be_nil }
+      Then { expect(@error.message).to eq "Test image expected to not match expectation image" }
     end
   end
 

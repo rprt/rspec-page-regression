@@ -5,7 +5,7 @@ module RSpec::PageRegression
   RSpec::Matchers.define :match_expectation do |expectation_path|
 
     match do |page|
-      @filepaths = FilePaths.new(example, expectation_path)
+      @filepaths = FilePaths.new(RSpec.current_example, expectation_path)
       Renderer.render(page, @filepaths.test_image)
       @comparison = ImageComparison.new(@filepaths)
       @comparison.result == :match
@@ -30,7 +30,7 @@ module RSpec::PageRegression
     end
 
     failure_message_for_should_not do |page|
-      "Test image should not match expectation image"
+      "Test image expected to not match expectation image"
     end
 
     def viewer

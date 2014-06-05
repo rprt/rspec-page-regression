@@ -13,12 +13,12 @@ module Helpers
   end
 
   def getpath(root, base)
-    (root + "expectation" + group_path(example.metadata) + "#{base}.png").relative_path_from Pathname.getwd
+    (root + "expectation" + group_path(RSpec.current_example.metadata[:example_group]) + "#{base}.png").relative_path_from Pathname.getwd
   end
 
   def group_path(metadata)
     return Pathname.new("") if metadata.nil?
-    group_path(metadata[:example_group]) + metadata[:description].parameterize("_")
+    group_path(metadata[:parent_example_group]) + metadata[:description].parameterize("_")
   end
 
 end
