@@ -144,6 +144,8 @@ Don't forget to include specs (`rake spec`) to verify your functionality.  Code 
 
 Release Notes:
 
+* 0.2.1 - Explicit dependency on rspec ~> 2.14.0
+
 * 0.2.0 - Support selenium.  Thanks to [@edwinvdgraaf](https://github.com/edwinvdgraaf)
 
 * 0.1.2 - Remove existing difference images so they won't be shown in cases where files couldn't be differenced.
