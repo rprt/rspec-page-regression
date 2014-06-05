@@ -36,6 +36,16 @@ Rspec-page-regression presupposes the convention that your spec files are somwhe
 
 To install for use with Selenium, [see instructions below](#selenium).
 
+#### Note on versions:
+Rspec-page-regression has multiple versions that work in concert with the [significant changes in RSpec version 3](http://myronmars.to/n/dev-blog/2013/07/the-plan-for-rspec-3).  If you're using bundler, the gem dependencies should automatically find the proper version of rspec-page-regression for your chosen version of RSpec. 
+
+| Rspec Version | Rspec-page-regression |
+| ------------- | --------------------- |
+| >= 3.0.*      | >= 0.3.0				 |
+| 2.99          | 0.2.99                |
+| <= 2.14.*     | <= 0.2.1              |
+
+
 ## Usage
 
 Rspec-page-regression provides a matcher that renders the page and compares
@@ -49,14 +59,14 @@ the resulting image against an expected image.  To use it, you need to enable Ca
         visit my_page_path
       end
 
-      it { page.should match_expectation }
+      it { expect(page).to match_expectation }
 
       context "popup help" do
         before(:each) do
           click_button "Help"
         end
 
-        it { page.should match_expectation }
+        it { expect(page).to match_expectation }
       end
     end
     
@@ -94,7 +104,7 @@ As per the above examples, the expectation images default to being stored under 
 
 If that default scheme doesn't suit you, you can pass a path to where the expectation image should be found:
 
-    page.should match_expectation "/path/to/my/file.png"
+    expect(page).to match_expectation "/path/to/my/file.png"
 
 Everything will work normally, and the failure messages will refer to your path.
 
@@ -145,6 +155,10 @@ Don't forget to include specs (`rake spec`) to verify your functionality.  Code 
 ## History
 
 Release Notes:
+
+* 0.3.0 - Compatibility with rspec 3.0
+
+* 0.2.99 - Compatibility with rspec 2.99
 
 * 0.2.1 - Explicit dependency on rspec ~> 2.14.0
 

@@ -11,7 +11,7 @@ module RSpec::PageRegression
       @comparison.result == :match
     end
 
-    failure_message_for_should do |page|
+    failure_message do |page|
       msg = case @comparison.result
             when :missing_expected then "Missing expectation image #{@filepaths.expected_image}"
             when :missing_test then "Missing test image #{@filepaths.test_image}"
@@ -29,7 +29,7 @@ module RSpec::PageRegression
       msg
     end
 
-    failure_message_for_should_not do |page|
+    failure_message_when_negated do |page|
       "Test image expected to not match expectation image"
     end
 
