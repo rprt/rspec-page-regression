@@ -11,7 +11,7 @@ that makes it easy to headlessly regression test your web application pages to m
 
 It provides an RSpec matcher that compares the test snapshot to an expected image, and facilitates management of the images.
 
-Rspec-page-regression uses [PhantomJS](http://www.phantomjs.org/) to headlessly render web page snapshots, by virtue of the [Poltergeist](https://github.com/jonleighton/poltergeist) driver for [Capybara](https://github.com/jnicklas/capybara).
+Rspec-page-regression uses [PhantomJS](http://www.phantomjs.org/) to headlessly render web page snapshots, by virtue of the [Poltergeist](https://github.com/jonleighton/poltergeist) driver for [Capybara](https://github.com/jnicklas/capybara).  You can also use the Selenium driver to test against real browsers.
 
 
 ## Installation
@@ -33,6 +33,8 @@ And in your spec_helper:
 	Capybara.javascript_driver = :poltergeist
 
 Rspec-page-regression presupposes the convention that your spec files are somwhere under a directory named `spec` (checked in to your repo), which has a sibling directory `tmp` (.gitignore'd)
+
+To install for use with Selenium, [see instructions below](#selenium).
 
 ## Usage
 
@@ -107,7 +109,7 @@ The default window size for the renders is 1024 x 768 pixels.  You can specify a
 
 Note that this specifies the size of the browser window viewport; but rspec-page-regression requests a render of the full page, which might extend beyond the window.  So the rendered file dimensions may be larger than this configuration value.
 
-### Using the selenium driver
+## [Using the selenium driver](id:selenium)
 
 You can also use the selenium driver with capybara. This offers the possiblity to visually test your pages against a range of real browsers. 
 
