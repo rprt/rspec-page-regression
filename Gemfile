@@ -4,4 +4,4 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'awesome_print'
-gem 'byebug'
+gem 'byebug' if RUBY_VERSION >= "2.0.0"
