@@ -1,5 +1,5 @@
 module RSpec
   module PageRegression
-    VERSION = "0.2.99"
+    VERSION = "0.3.0"
   end
 end
