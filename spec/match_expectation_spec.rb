@@ -62,6 +62,40 @@ describe "match_expectation" do
       Then { expect(difference_path.read).to eq fixture_image("ABdiff").read }
     end
 
+    context "when difference threshold is set" do
+      context "when difference threshold is configured below image difference" do
+        Given do
+          RSpec::PageRegression.configure do |config|
+            config.threshold = 0.01
+          end
+        end
+        Given { use_test_image "A" }
+        Given { use_expected_image "B" }
+
+        Then { expect(@error).to_not be_nil }
+        Then { expect(@error.message).to include "Test image does not match expected image" }
+        Then { expect(@error.message).to match viewer_pattern(test_path, expected_path, difference_path) }
+
+        Then { expect(difference_path.read).to eq fixture_image("ABdiff").read }
+      end
+
+      context "when difference threshold is configured above image difference" do
+        Given do
+          RSpec::PageRegression.configure do |config|
+            config.threshold = 0.02
+          end
+        end
+        Given { use_test_image "A" }
+        Given { use_expected_image "B" }
+
+        Then { expect(@error).to be_nil }
+      end
+
+      after :each do
+        RSpec::PageRegression.class_variable_set :@@threshold, nil
+      end
+    end
+
     context "when test image is missing" do
       Given { use_expected_image "A" }
 
