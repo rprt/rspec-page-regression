@@ -1,6 +1,6 @@
 
 [![Gem Version](https://badge.fury.io/rb/rspec-page-regression.png)](http://badge.fury.io/rb/rspec-page-regression)
-[![Build Status](https://secure.travis-ci.org/ronen/rspec-page-regression.png)](http://travis-ci.org/ronen/rspec-page-regression) 
+[![Build Status](https://secure.travis-ci.org/ronen/rspec-page-regression.png)](http://travis-ci.org/ronen/rspec-page-regression)
 [![Dependency Status](https://gemnasium.com/ronen/rspec-page-regression.png)](https://gemnasium.com/ronen/rspec-page-regression)
 
 # rspec-page-regression
@@ -27,7 +27,7 @@ And in your spec_helper:
 
     require 'rspec'  # or 'rspec/rails' if you're using Rails
     require 'rspec/page-regression'
-    
+
 	require 'capybara/rspec'
 	require 'capybara/poltergeist'
 	Capybara.javascript_driver = :poltergeist
@@ -37,7 +37,7 @@ Rspec-page-regression presupposes the convention that your spec files are somwhe
 To install for use with Selenium, [see instructions below](#selenium).
 
 #### Note on versions:
-Rspec-page-regression has multiple versions that work in concert with the [significant changes in RSpec version 3](http://myronmars.to/n/dev-blog/2013/07/the-plan-for-rspec-3).  If you're using bundler, the gem dependencies should automatically find the proper version of rspec-page-regression for your chosen version of RSpec. 
+Rspec-page-regression has multiple versions that work in concert with the [significant changes in RSpec version 3](http://myronmars.to/n/dev-blog/2013/07/the-plan-for-rspec-3).  If you're using bundler, the gem dependencies should automatically find the proper version of rspec-page-regression for your chosen version of RSpec.
 
 | Rspec Version | Rspec-page-regression |
 | ------------- | --------------------- |
@@ -52,7 +52,7 @@ Rspec-page-regression provides a matcher that renders the page and compares
 the resulting image against an expected image.  To use it, you need to enable Capybara and Poltergeist by specifying `:type => :feature` and `:js => true`:
 
     require 'spec_helper'
-    
+
     describe "my page", :type => :feature, :js => true do
 
       before(:each) do
@@ -69,7 +69,7 @@ the resulting image against an expected image.  To use it, you need to enable Ca
         it { expect(page).to match_expectation }
       end
     end
-    
+
 The spec will pass if the test rendered image contains the  exact same pixel values as the expectated image.  Otherwise it will fail with an error message along the lines of:
 
     Test image does not match expected image
@@ -110,6 +110,8 @@ Everything will work normally, and the failure messages will refer to your path.
 
 ## Configuration
 
+### Window size
+
 The default window size for the renders is 1024 x 768 pixels.  You can specify another size as `[height, width]` in pixels:
 
      # in spec_helper.rb:
@@ -119,9 +121,19 @@ The default window size for the renders is 1024 x 768 pixels.  You can specify a
 
 Note that this specifies the size of the browser window viewport; but rspec-page-regression requests a render of the full page, which might extend beyond the window.  So the rendered file dimensions may be larger than this configuration value.
 
+### Image difference threshold
+
+By default, a test fails if only a single pixel in the screenshot differs from the expectation image. To account for minor rendering differences, you can set a threshold value that allows a certain amount of differences. The threshold value is the fraction of pixels that are allowed to differ before the test fails.
+
+    RSpec::PageRegression.configure do |config|
+      config.threshold = 0.01
+    end
+
+This setting means that 1% of pixels are allowed to differ between the rendering result and the expectation image. For example, for an image size of 1024 x 768 and a threshold of 0.01, the maximum number of pixel differences between the images is 7864.
+
 ## [Using the selenium driver](id:selenium)
 
-You can also use the selenium driver with capybara. This offers the possiblity to visually test your pages against a range of real browsers. 
+You can also use the selenium driver with capybara. This offers the possiblity to visually test your pages against a range of real browsers.
 
 Add the [selenium-webdriver](https://rubygems.org/gems/selenium-webdriver) to your Gemfile:
 
@@ -168,4 +180,3 @@ Release Notes:
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ronen/rspec-page-regression/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
