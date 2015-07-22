@@ -1,3 +1,4 @@
+require 'pathname'
 require 'simplecov'
 require 'simplecov-gem-adapter'
 SimpleCov.start "gem"

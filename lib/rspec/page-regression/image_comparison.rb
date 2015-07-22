@@ -40,8 +40,13 @@ module RSpec::PageRegression
     end
 
     def pixels_match?
+      max_count = RSpec::PageRegression.threshold * @itest.width * @itest.height
+      count = 0
       @itest.height.times do |y|
-        return false if @itest.row(y) != @iexpected.row(y)
+        next if @itest.row(y) == @iexpected.row(y)
+        diff = @itest.row(y).zip(@iexpected.row(y)).select { |x, y| x != y }
+        count += diff.count
+        return false if count > max_count
       end
       return true
     end
