@@ -168,6 +168,8 @@ Don't forget to include specs (`rake spec`) to verify your functionality.  Code 
 
 Release Notes:
 
+* 0.4.0 - Add difference threshold.  Thanks to [@abersager](https://github.com/abersager)
+
 * 0.3.0 - Compatibility with rspec 3.0
 
 * 0.2.99 - Compatibility with rspec 2.99
