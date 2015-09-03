@@ -10,9 +10,11 @@ module RSpec::PageRegression
       expected_path = Pathname.new(expected_path) if expected_path
 
       descriptions = description_ancestry(example.metadata[:example_group])
-      descriptions.pop if descriptions.last =~ %r{
+      descriptions.push example.description unless example.description.parameterize('_') =~ %r{
         ^
-        (then_+)? (page_+)? (should_+)? match_expectation
+        (then_+)?
+        ( (expect_+) (page_+) (to_+) (not_+)? | (page_+) (should_+)? )
+        match_expectation
         (_#{Regexp.escape(expected_path.to_s)})?
           $
       }xi

@@ -13,6 +13,15 @@ describe "match_expectation" do
     @match_argument = nil
   }
 
+  context "helpers" do
+    it "use proper paths" do
+      expect(expected_path).to eq Pathname.new("spec/expectation/match_expectation/helpers/use_proper_paths/expected.png")
+      expect(test_path).to eq Pathname.new("tmp/spec/expectation/match_expectation/helpers/use_proper_paths/test.png")
+      expect(difference_path).to eq Pathname.new("tmp/spec/expectation/match_expectation/helpers/use_proper_paths/difference.png")
+    end
+  end
+
+
   context "using expect().to" do
 
     When {
