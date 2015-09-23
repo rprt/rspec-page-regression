@@ -13,6 +13,7 @@ It provides an RSpec matcher that compares the test snapshot to an expected imag
 
 Rspec-page-regression uses [PhantomJS](http://www.phantomjs.org/) to headlessly render web page snapshots, by virtue of the [Poltergeist](https://github.com/jonleighton/poltergeist) driver for [Capybara](https://github.com/jnicklas/capybara).  You can also use the Selenium driver to test against real browsers.
 
+Rspec-page-regression is tested on ruby 1.9.3, 2.1.0, and jruby
 
 ## Installation
 
