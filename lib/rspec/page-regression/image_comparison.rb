@@ -1,4 +1,8 @@
-require "oily_png"
+if RUBY_PLATFORM == 'java'
+  require "chunky_png"
+else
+  require 'oily_png'
+end
 
 module RSpec::PageRegression
 
