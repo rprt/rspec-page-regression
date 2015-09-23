@@ -169,6 +169,8 @@ Don't forget to include specs (`rake spec`) to verify your functionality.  Code 
 
 Release Notes:
 
+* 0.4.2 - Now works with jruby.  Thanks to [@paresharma](https://github.com/paresharma)
+
 * 0.4.1 - Bug fix: wasn't including example name in file path.  Thanks to [@kurtisnelson](https://github.com/kurtisnelson)
 
 * 0.4.0 - Add difference threshold.  Thanks to [@abersager](https://github.com/abersager)
