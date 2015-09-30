@@ -4,7 +4,7 @@ module Helpers
     getpath(TestDir, "test")
   end
 
-  def expected_path
+  def reference_screenshot_path
     getpath(SpecDir, "expected")
   end
 
@@ -13,7 +13,7 @@ module Helpers
   end
 
   def getpath(root, base)
-    (root + "expectation" + example_path(RSpec.current_example) + "#{base}.png").relative_path_from Pathname.getwd
+    (root + "reference_screenshots" + example_path(RSpec.current_example) + "#{base}.png").relative_path_from Pathname.getwd
   end
 
   def example_path(example)
