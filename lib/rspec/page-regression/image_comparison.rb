@@ -29,7 +29,7 @@ module RSpec::PageRegression
     def compare
       @filepaths.difference_image.unlink if @filepaths.difference_image.exist?
 
-      return :missing_ref_screenshot unless @filepaths.reference_screenshot.exist?
+      return :missing_reference_screenshot unless @filepaths.reference_screenshot.exist?
       return :missing_test_screenshot unless @filepaths.test_screenshot.exist?
 
       @iexpected = ChunkyPNG::Image.from_file(@filepaths.reference_screenshot)

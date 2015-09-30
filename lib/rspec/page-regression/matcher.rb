@@ -13,7 +13,7 @@ module RSpec::PageRegression
 
     failure_message do |page|
       msg = case @comparison.result
-            when :missing_ref_screenshot then "Missing reference screenshot #{@filepaths.reference_screenshot}"
+            when :missing_reference_screenshot then "Missing reference screenshot #{@filepaths.reference_screenshot}"
             when :missing_test_screenshot then "Missing test screenshot #{@filepaths.test_screenshot}"
             when :size_mismatch then "Test screenshot size #{@comparison.test_size.join('x')} does not match reference screenshot size #{@comparison.expected_size.join('x')}"
             when :difference then "Test screenshot does not match reference screenshot"
@@ -22,7 +22,7 @@ module RSpec::PageRegression
       msg += "\n    $ #{viewer} #{@filepaths.all.select(&:exist?).join(' ')}"
 
       case @comparison.result
-      when :missing_ref_screenshot
+      when :missing_reference_screenshot
         msg += "\nCreate it via:\n    $ mkdir -p #{@filepaths.reference_screenshot.dirname} && cp #{@filepaths.test_screenshot} #{@filepaths.reference_screenshot}"
       end
 

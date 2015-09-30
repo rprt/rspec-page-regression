@@ -87,7 +87,7 @@ Notice that the second line gives a command you can copy and paste in order to v
 
 It also shows a "difference image" in which each pixel contains the per-channel absolute difference between the test and expected images.  That is, the difference images is black everywhere except has some funky colored pixels where the test and expected images differ.  To help you locate those, it also has a red bounding box drawn around the region with differences.
 
-### How do I create reference screenshots (expectation images)?
+### How do I create reference screenshots?
 
 The easiest way to create a reference screenshot is to run the test for the first time and let it fail.  You'll then get a failure message like:
 
@@ -99,7 +99,7 @@ The easiest way to create a reference screenshot is to run the test for the firs
 First view the test image to make sure it really is what you expect.  Then copy and paste the last line to install it as the reference screenshot.
 (And then of course commit this reference screenshot into your repository.)
 
-### How do I update reference screenshots (expectation images)?
+### How do I update reference screenshots?
 
 If you've deliberatly changed something that affects the look of your web page, your regression test will fail.  The "test" image will contain the new look, and the "expected" image will contain the old.
 
@@ -107,7 +107,7 @@ Once you've visually checked the test image to make sure it's really what you wa
 
 The failure message doesn't include a ready-to-copy-and-paste `cp` command, but you can copy and paste the individual file paths from the message.  (The reason not to have a ready-to-copy-and-paste command is if the failure is real, it shouldn't be too easy to mindlessly copy and paste to make it go away.)
 
-### Where are the reference screenshots (expectation images)?
+### Where are the reference screenshots?
 
 As per the above examples, the reference screenshots default to being stored under `spec/reference_screenshots`, with the remainder of the path constructed from the example group descriptions. (If the `it` also has a description it will be used as well.)
 

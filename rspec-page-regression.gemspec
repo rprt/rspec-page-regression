@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["ronen barzel"]
   spec.email         = ["ronen@barzel.org"]
   spec.summary       = %q{Web page rendering (HTML, CSS, and JavasSript) regression for RSpec}
-  spec.description   = %q{Rspec-page-regression provides a mechanism for headless regression testing of web page renders in RSpec. It takes into account HTML, CSS, and JavaScript, by virtue of using PhantomJS (via the Poltergeist gem) to render snapshots.  It provides an RSpec matcher that compares the test snapshot to a reference screenshots, and facilitates management of the images.}
+  spec.description   = %q{Rspec-page-regression provides a mechanism for headless regression testing of web page renders in RSpec. It takes into account HTML, CSS, and JavaScript, by virtue of using PhantomJS (via the Poltergeist gem) to render snapshots.  It provides an RSpec matcher that compares the test snapshot to a reference screenshot, and facilitates management of the images.}
   spec.homepage      = "https://github.com/ronen/rspec-page-regression"
   spec.license       = "MIT"
 
