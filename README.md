@@ -37,15 +37,22 @@ Rspec-page-regression presupposes the convention that your spec files are somwhe
 
 To install for use with Selenium, [see instructions below](#selenium).
 
-#### Note on versions:
+#### Note on versions
 Rspec-page-regression has multiple versions that work in concert with the [significant changes in RSpec version 3](http://myronmars.to/n/dev-blog/2013/07/the-plan-for-rspec-3).  If you're using bundler, the gem dependencies should automatically find the proper version of rspec-page-regression for your chosen version of RSpec.
 
 | Rspec Version | Rspec-page-regression |
 | ------------- | --------------------- |
-| >= 3.0.*      | >= 0.3.0				 |
+| >= 3.0.*      | >= 0.3.0			    |
 | 2.99          | 0.2.99                |
 | <= 2.14.*     | <= 0.2.1              |
 
+
+### Upgrading from rspec-page-regression v0.4 to v1.0
+* Rename all uses of `match_expectation` to `match_reference_screenshot` in your sources.
+* Delete the directories `spec/expectation` and `tmp/spec/expectation`
+* Make sure that the configuration flag `autocreate_reference_screenshots` is set to true (this is the default). # TODO: Depends on finishing issue #22
+* Run all specs. A new directory `reference_screenshots` directory with up to date screenshots will be created automatically.
+* Check that all screenshots look ok prior to committing them.
 
 ## Usage
 
