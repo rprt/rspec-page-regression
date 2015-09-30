@@ -1,6 +1,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/rspec-page-regression.png)](http://badge.fury.io/rb/rspec-page-regression)
 [![Build Status](https://secure.travis-ci.org/rprt/rspec-page-regression.png)](http://travis-ci.org/ronen/rspec-page-regression)
+[![Coverage Status](https://coveralls.io/repos/rprt/rspec-page-regression/badge.svg?branch=master&service=github)](https://coveralls.io/github/rprt/rspec-page-regression?branch=master)
 [![Dependency Status](https://gemnasium.com/rprt/rspec-page-regression.png)](https://gemnasium.com/ronen/rspec-page-regression)
 
 # rspec-page-regression
