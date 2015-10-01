@@ -1,7 +1,7 @@
 require 'spec_helper.rb'
 require 'fileutils'
 
-describe "match_expectation" do
+describe "match_reference_screenshot" do
 
   Given {
     @opts = { :full => true }
@@ -15,9 +15,9 @@ describe "match_expectation" do
 
   context "helpers" do
     it "use proper paths" do
-      expect(expected_path).to eq Pathname.new("spec/expectation/match_expectation/helpers/use_proper_paths/expected.png")
-      expect(test_path).to eq Pathname.new("tmp/spec/expectation/match_expectation/helpers/use_proper_paths/test.png")
-      expect(difference_path).to eq Pathname.new("tmp/spec/expectation/match_expectation/helpers/use_proper_paths/difference.png")
+      expect(reference_screenshot_path).to eq Pathname.new("spec/reference_screenshots/match_reference_screenshot/helpers/use_proper_paths/expected.png")
+      expect(test_path).to eq Pathname.new("tmp/spec/reference_screenshots/match_reference_screenshot/helpers/use_proper_paths/test.png")
+      expect(difference_path).to eq Pathname.new("tmp/spec/reference_screenshots/match_reference_screenshot/helpers/use_proper_paths/difference.png")
     end
   end
 
@@ -26,7 +26,7 @@ describe "match_expectation" do
 
     When {
       begin
-        expect(@page).to match_expectation @match_argument
+        expect(@page).to match_reference_screenshot @match_argument
       rescue RSpec::Expectations::ExpectationNotMetError => e
         @error = e
       end
@@ -53,22 +53,22 @@ describe "match_expectation" do
     end
 
     context "when files match" do
-      Given { use_test_image "A" }
-      Given { use_expected_image "A" }
+      Given { use_test_screenshot "A" }
+      Given { use_reference_screenshot "A" }
 
       Then { expect(@error).to be_nil }
     end
 
 
     context "when files do not match" do
-      Given { use_test_image "A" }
-      Given { use_expected_image "B" }
+      Given { use_test_screenshot "A" }
+      Given { use_reference_screenshot "B" }
 
       Then { expect(@error).to_not be_nil }
-      Then { expect(@error.message).to include "Test image does not match expected image" }
-      Then { expect(@error.message).to match viewer_pattern(test_path, expected_path, difference_path) }
+      Then { expect(@error.message).to include "Test screenshot does not match reference screenshot" }
+      Then { expect(@error.message).to match viewer_pattern(test_path, reference_screenshot_path, difference_path) }
 
-      Then { expect(difference_path.read).to eq fixture_image("ABdiff").read }
+      Then { expect(difference_path.read).to eq fixture_screenshot("ABdiff").read }
     end
 
     context "when difference threshold is set" do
@@ -78,14 +78,14 @@ describe "match_expectation" do
             config.threshold = 0.01
           end
         end
-        Given { use_test_image "A" }
-        Given { use_expected_image "B" }
+        Given { use_test_screenshot "A" }
+        Given { use_reference_screenshot "B" }
 
         Then { expect(@error).to_not be_nil }
-        Then { expect(@error.message).to include "Test image does not match expected image" }
-        Then { expect(@error.message).to match viewer_pattern(test_path, expected_path, difference_path) }
+        Then { expect(@error.message).to include "Test screenshot does not match reference screenshot" }
+        Then { expect(@error.message).to match viewer_pattern(test_path, reference_screenshot_path, difference_path) }
 
-        Then { expect(difference_path.read).to eq fixture_image("ABdiff").read }
+        Then { expect(difference_path.read).to eq fixture_screenshot("ABdiff").read }
       end
 
       context "when difference threshold is configured above image difference" do
@@ -94,8 +94,8 @@ describe "match_expectation" do
             config.threshold = 0.02
           end
         end
-        Given { use_test_image "A" }
-        Given { use_expected_image "B" }
+        Given { use_test_screenshot "A" }
+        Given { use_reference_screenshot "B" }
 
         Then { expect(@error).to be_nil }
       end
@@ -105,25 +105,25 @@ describe "match_expectation" do
       end
     end
 
-    context "when test image is missing" do
-      Given { use_expected_image "A" }
+    context "when test screenshot is missing" do
+      Given { use_reference_screenshot "A" }
 
       Then { expect(@error).to_not be_nil }
-      Then { expect(@error.message).to include "Missing test image #{test_path}" }
-      Then { expect(@error.message).to match viewer_pattern(expected_path) }
+      Then { expect(@error.message).to include "Missing test screenshot #{test_path}" }
+      Then { expect(@error.message).to match viewer_pattern(reference_screenshot_path) }
       context "with previously-created difference image" do
         Given { preexisting_difference_image }
         Then { expect(difference_path).to_not be_exist }
       end
     end
 
-    context "when expected image is missing" do
-      Given { use_test_image "A" }
+    context "when reference screenshot is missing" do
+      Given { use_test_screenshot "A" }
 
       Then { expect(@error).to_not be_nil }
-      Then { expect(@error.message).to include "Missing expectation image #{expected_path}" }
+      Then { expect(@error.message).to include "Missing reference screenshot #{reference_screenshot_path}" }
       Then { expect(@error.message).to match viewer_pattern(test_path) }
-      Then { expect(@error.message).to include "mkdir -p #{expected_path.dirname} && cp #{test_path} #{expected_path}" }
+      Then { expect(@error.message).to include "mkdir -p #{reference_screenshot_path.dirname} && cp #{test_path} #{reference_screenshot_path}" }
       context "with previously-created difference image" do
         Given { preexisting_difference_image }
         Then { expect(difference_path).to_not be_exist }
@@ -131,12 +131,12 @@ describe "match_expectation" do
     end
 
     context "when sizes mismatch" do
-      Given { use_test_image "Small" }
-      Given { use_expected_image "A" }
+      Given { use_test_screenshot "Small" }
+      Given { use_reference_screenshot "A" }
 
       Then { expect(@error).to_not be_nil }
-      Then { expect(@error.message).to include "Test image size 256x167 does not match expectation 512x334" }
-      Then { expect(@error.message).to match viewer_pattern(test_path, expected_path) }
+      Then { expect(@error.message).to include "Test screenshot size 256x167 does not match reference screenshot size 512x334" }
+      Then { expect(@error.message).to match viewer_pattern(test_path, reference_screenshot_path) }
       context "with previously-created difference image" do
         Given { preexisting_difference_image }
         Then { expect(difference_path).to_not be_exist }
@@ -145,7 +145,7 @@ describe "match_expectation" do
 
     context "with match argument" do
       Given { @match_argument = "/this/is/a/test.png" }
-      Then { expect(@error.message).to include "Missing expectation image /this/is/a/test.png" }
+      Then { expect(@error.message).to include "Missing reference screenshot /this/is/a/test.png" }
       context "with previously-created difference image" do
         Given { preexisting_difference_image }
         Then { expect(difference_path).to_not be_exist }
@@ -156,12 +156,12 @@ describe "match_expectation" do
       Given do
         RSpec::Core::Example.any_instance.stubs :metadata => {
           file_path: __FILE__,
-          description: "Then expect(page).to match_expectation",
+          description: "Then expect(page).to match_reference_screenshot",
           example_group: { description: "parent" }
         }
       end
-      Then { expect(@driver).to have_received(:save_screenshot).with(Pathname.new("tmp/spec/expectation/parent/test.png"), @opts) }
-      Then { expect(@error.message).to include "Missing expectation image spec/expectation/parent/expected.png" }
+      Then { expect(@driver).to have_received(:save_screenshot).with(Pathname.new("tmp/spec/reference_screenshots/parent/test.png"), @opts) }
+      Then { expect(@error.message).to include "Missing reference screenshot spec/reference_screenshots/parent/expected.png" }
     end
 
     context "with page size configuration" do
@@ -178,46 +178,46 @@ describe "match_expectation" do
   context "using expect().to_not" do
     When {
       begin
-        expect(@page).to_not match_expectation
+        expect(@page).to_not match_reference_screenshot
       rescue RSpec::Expectations::ExpectationNotMetError => e
         @error = e
       end
     }
 
     context "when files don't match" do
-      Given { use_test_image "A" }
-      Given { use_expected_image "B" }
+      Given { use_test_screenshot "A" }
+      Given { use_reference_screenshot "B" }
 
       Then { expect(@error).to be_nil }
     end
 
     context "when files match" do
-      Given { use_test_image "A" }
-      Given { use_expected_image "A" }
+      Given { use_test_screenshot "A" }
+      Given { use_reference_screenshot "A" }
 
       Then { expect(@error).to_not be_nil }
-      Then { expect(@error.message).to eq "Test image expected to not match expectation image" }
+      Then { expect(@error.message).to eq "Test screenshot expected to not match reference screenshot" }
     end
   end
 
-  def fixture_image(name)
+  def fixture_screenshot(name)
     FixturesDir + "#{name}.png"
   end
 
-  def use_fixture_image(name, path)
+  def use_fixture_screenshot(name, path)
     path.dirname.mkpath unless path.dirname.exist?
-    FileUtils.cp fixture_image(name), path
+    FileUtils.cp fixture_screenshot(name), path
   end
 
   def create_existing_difference_image
   end
 
-  def use_test_image(name)
-    use_fixture_image(name, test_path)
+  def use_test_screenshot(name)
+    use_fixture_screenshot(name, test_path)
   end
 
-  def use_expected_image(name)
-    use_fixture_image(name, expected_path)
+  def use_reference_screenshot(name)
+    use_fixture_screenshot(name, reference_screenshot_path)
   end
 
   def preexisting_difference_image

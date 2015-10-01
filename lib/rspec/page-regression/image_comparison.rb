@@ -29,11 +29,11 @@ module RSpec::PageRegression
     def compare
       @filepaths.difference_image.unlink if @filepaths.difference_image.exist?
 
-      return :missing_expected unless @filepaths.expected_image.exist?
-      return :missing_test unless @filepaths.test_image.exist?
+      return :missing_reference_screenshot unless @filepaths.reference_screenshot.exist?
+      return :missing_test_screenshot unless @filepaths.test_screenshot.exist?
 
-      @iexpected = ChunkyPNG::Image.from_file(@filepaths.expected_image)
-      @itest = ChunkyPNG::Image.from_file(@filepaths.test_image)
+      @iexpected = ChunkyPNG::Image.from_file(@filepaths.reference_screenshot)
+      @itest = ChunkyPNG::Image.from_file(@filepaths.test_screenshot)
 
       return :size_mismatch if test_size != expected_size
 
@@ -56,7 +56,7 @@ module RSpec::PageRegression
     end
 
     def create_difference_image
-      idiff = ChunkyPNG::Image.from_file(@filepaths.expected_image)
+      idiff = ChunkyPNG::Image.from_file(@filepaths.reference_screenshot)
       xmin = @itest.width + 1
       xmax = -1
       ymin = @itest.height + 1

@@ -10,9 +10,9 @@
 Rspec-page-regression is an [RSpec](https://github.com/rspec/rspec) plugin
 that makes it easy to headlessly regression test your web application pages to make sure the pages continue to look the way you expect them to look, taking into account HTML, CSS, and JavaScript.
 
-It provides an RSpec matcher that compares the test snapshot to an expected image, and facilitates management of the images.
+It provides an RSpec matcher that compares the test screenshot to a reference screenshot, and facilitates management of the screenshots.
 
-Rspec-page-regression uses [PhantomJS](http://www.phantomjs.org/) to headlessly render web page snapshots, by virtue of the [Poltergeist](https://github.com/jonleighton/poltergeist) driver for [Capybara](https://github.com/jnicklas/capybara).  You can also use the Selenium driver to test against real browsers.
+Rspec-page-regression uses [PhantomJS](http://www.phantomjs.org/) to headlessly render web page screenshots, by virtue of the [Poltergeist](https://github.com/jonleighton/poltergeist) driver for [Capybara](https://github.com/jnicklas/capybara).  You can also use the Selenium driver to test against real browsers.
 
 Rspec-page-regression is tested on ruby 1.9.3, 2.1.0, and jruby
 
@@ -38,20 +38,27 @@ Rspec-page-regression presupposes the convention that your spec files are somwhe
 
 To install for use with Selenium, [see instructions below](#selenium).
 
-#### Note on versions:
+#### Note on versions
 Rspec-page-regression has multiple versions that work in concert with the [significant changes in RSpec version 3](http://myronmars.to/n/dev-blog/2013/07/the-plan-for-rspec-3).  If you're using bundler, the gem dependencies should automatically find the proper version of rspec-page-regression for your chosen version of RSpec.
 
 | Rspec Version | Rspec-page-regression |
 | ------------- | --------------------- |
-| >= 3.0.*      | >= 0.3.0				 |
+| >= 3.0.*      | >= 0.3.0			    |
 | 2.99          | 0.2.99                |
 | <= 2.14.*     | <= 0.2.1              |
 
 
+### Upgrading from rspec-page-regression v0.4 to v1.0
+* Rename all uses of `match_expectation` to `match_reference_screenshot` in your sources.
+* Delete the directories `spec/expectation` and `tmp/spec/expectation`
+* Make sure that the configuration flag `autocreate_reference_screenshots` is set to true (this is the default). # TODO: Depends on finishing issue #22
+* Run all specs. A new directory `reference_screenshots` directory with up to date screenshots will be created automatically.
+* Check that all screenshots look ok prior to committing them.
+
 ## Usage
 
-Rspec-page-regression provides a matcher that renders the page and compares
-the resulting image against an expected image.  To use it, you need to enable Capybara and Poltergeist by specifying `:type => :feature` and `:js => true`:
+Rspec-page-regression provides a matcher that renders the page, takes a screenshot and compares
+it against a reference screenshots.  To use it, you need to enable Capybara and Poltergeist by specifying `:type => :feature` and `:js => true`:
 
     require 'spec_helper'
 
@@ -61,52 +68,53 @@ the resulting image against an expected image.  To use it, you need to enable Ca
         visit my_page_path
       end
 
-      it { expect(page).to match_expectation }
+      it { expect(page).to match_reference_screenshot }
 
       context "popup help" do
         before(:each) do
           click_button "Help"
         end
 
-        it { expect(page).to match_expectation }
+        it { expect(page).to match_reference_screenshot }
       end
     end
 
-The spec will pass if the test rendered image contains the  exact same pixel values as the expectated image.  Otherwise it will fail with an error message along the lines of:
+The spec will pass if the test rendered screenshot contains the  exact same pixel values as the reference screenshot.  Otherwise it will fail with an error message along the lines of:
 
-    Test image does not match expected image
-       $ open tmp/spec/expectation/my_page/popup_help/test.png spec/expectation/my_page/popup_help/expected.png tmp/spec/expectation/my_page/popup_help/difference.png
+    Test image does not match reference screenshot
+       $ open tmp/spec/reference_screenshots/my_page/popup_help/test.png spec/reference_screenshots/my_page/popup_help/expected.png tmp/spec/reference_screenshots/my_page/popup_help/difference.png
 
 Notice that the second line gives a command you can copy and paste in order to visually compare the test and expected images.
 
 It also shows a "difference image" in which each pixel contains the per-channel absolute difference between the test and expected images.  That is, the difference images is black everywhere except has some funky colored pixels where the test and expected images differ.  To help you locate those, it also has a red bounding box drawn around the region with differences.
 
-### How do I create expectation images?
+### How do I create reference screenshots?
 
-The easiest way to create an expectation image is to run the test for the first time and let it fail.  You'll then get a failure message like:
+The easiest way to create a reference screenshot is to run the test for the first time and let it fail.  You'll then get a failure message like:
 
-    Missing expectation image spec/expectation/my_page/popup_help/expected.png
-        $ open tmp/spec/expectation/my_page/popup_help/test.png
+    Missing reference screenshot spec/reference_screenshots/my_page/popup_help/expected.png
+        $ open tmp/spec/reference_screenshots/my_page/popup_help/test.png
     To create it:
-        $ mkdir -p spec/expectation/my_page/popup_help && cp tmp/spec/expectation/my_page/popup_help/test.png spec/expectation/my_page/popup_help/expected.png
+        $ mkdir -p spec/reference_screenshots/my_page/popup_help && cp tmp/spec/reference_screenshots/my_page/popup_help/test.png spec/reference_screenshots/my_page/popup_help/expected.png
 
-First view the test image to make sure it really is what you expect.  Then copy and paste the last line to install it as the expected image.  (And then of course commit the expected image into your repository.)
+First view the test image to make sure it really is what you expect.  Then copy and paste the last line to install it as the reference screenshot.
+(And then of course commit this reference screenshot into your repository.)
 
-### How do I update expectation images?
+### How do I update reference screenshots?
 
 If you've deliberatly changed something that affects the look of your web page, your regression test will fail.  The "test" image will contain the new look, and the "expected" image will contain the old.
 
-Once you've visually checked the test image to make sure it's really what you want, then simply copy the test image over the old expectation image.  (And then of course commit it it into your repository.)
+Once you've visually checked the test image to make sure it's really what you want, then simply copy the test image over the old reference screenshot.  (And then of course commit it it into your repository.)
 
 The failure message doesn't include a ready-to-copy-and-paste `cp` command, but you can copy and paste the individual file paths from the message.  (The reason not to have a ready-to-copy-and-paste command is if the failure is real, it shouldn't be too easy to mindlessly copy and paste to make it go away.)
 
-### Where are the expectation images?
+### Where are the reference screenshots?
 
-As per the above examples, the expectation images default to being stored under `spec/expectation`, with the remainder of the path constructed from the example group descriptions. (If the `it` also has a description it will be used as well.)
+As per the above examples, the reference screenshots default to being stored under `spec/reference_screenshots`, with the remainder of the path constructed from the example group descriptions. (If the `it` also has a description it will be used as well.)
 
-If that default scheme doesn't suit you, you can pass a path to where the expectation image should be found:
+If that default scheme doesn't suit you, you can pass a path to where the reference screenshot should be found:
 
-    expect(page).to match_expectation "/path/to/my/file.png"
+    expect(page).to match_reference_screenshot "/path/to/my/screenshot.png"
 
 Everything will work normally, and the failure messages will refer to your path.
 
@@ -125,13 +133,13 @@ Note that this specifies the size of the browser window viewport; but rspec-page
 
 ### Image difference threshold
 
-By default, a test fails if only a single pixel in the screenshot differs from the expectation image. To account for minor rendering differences, you can set a threshold value that allows a certain amount of differences. The threshold value is the fraction of pixels that are allowed to differ before the test fails.
+By default, a test fails if only a single pixel in the screenshot differs from the reference screenshot. To account for minor rendering differences, you can set a threshold value that allows a certain amount of differences. The threshold value is the fraction of pixels that are allowed to differ before the test fails.
 
     RSpec::PageRegression.configure do |config|
       config.threshold = 0.01
     end
 
-This setting means that 1% of pixels are allowed to differ between the rendering result and the expectation image. For example, for an image size of 1024 x 768 and a threshold of 0.01, the maximum number of pixel differences between the images is 7864.
+This setting means that 1% of pixels are allowed to differ between the rendering result and the reference screenshot. For example, for an image size of 1024 x 768 and a threshold of 0.01, the maximum number of pixel differences between the images is 7864.
 
 ## [Using the selenium driver](id:selenium)
 
