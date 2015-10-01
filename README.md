@@ -126,7 +126,7 @@ The default window size for the renders is 1024 x 768 pixels.  You can specify a
 
      # in spec_helper.rb:
      RSpec::PageRegression.configure do |config|
-       config.page_size = [1280, 1024]
+       config.viewports = [1280, 1024]
      end
 
 Note that this specifies the size of the browser window viewport; but rspec-page-regression requests a render of the full page, which might extend beyond the window.  So the rendered file dimensions may be larger than this configuration value.

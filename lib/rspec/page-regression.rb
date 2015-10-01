@@ -9,12 +9,12 @@ module RSpec::PageRegression
     yield self
   end
 
-  def self.page_size= (page_size)
-    @@page_size = page_size
+  def self.viewports= (viewports)
+    @@viewports = viewports
   end
 
-  def self.page_size
-    @@page_size ||= [1024, 768]
+  def self.viewports
+    @@viewports ||= [1024, 768]
   end
 
   def self.threshold= (threshold)

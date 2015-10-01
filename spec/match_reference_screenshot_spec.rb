@@ -167,7 +167,7 @@ describe "match_reference_screenshot" do
     context "with page size configuration" do
       Given do
         RSpec::PageRegression.configure do |config|
-          config.page_size = [123, 456]
+          config.viewports = [123, 456]
         end
       end
       Then { expect(@driver).to have_received(:resize).with(123, 456) }
