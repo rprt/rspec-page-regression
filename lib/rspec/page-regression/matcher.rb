@@ -5,8 +5,9 @@ module RSpec::PageRegression
   RSpec::Matchers.define :match_reference_screenshot do |reference_screenshot_path|
 
     match do |page|
-      @filepaths = FilePaths.new(RSpec.current_example, reference_screenshot_path)
-      Renderer.render(page, @filepaths.test_screenshot)
+      @responsive_filepaths = FilePaths.responsive_file_paths(RSpec.current_example, reference_screenshot_path)
+      Renderer.render_responsive(page, @responsive_filepaths)
+      @filepaths = @responsive_filepaths.first
       @comparison = ImageComparison.new(@filepaths)
       @comparison.result == :match
     end
@@ -34,7 +35,7 @@ module RSpec::PageRegression
     end
 
     def viewer
-      File.basename(Which.which("open", "feh", "display", :array => true).first || "viewer")
+      File.basename(Which.which('open', 'feh', 'display', array: true).first || 'viewer')
     end
   end
 end

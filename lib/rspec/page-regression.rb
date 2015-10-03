@@ -14,7 +14,7 @@ module RSpec::PageRegression
   end
 
   def self.viewports
-    @@viewports ||= [1024, 768]
+    @@viewports ||= { default: [1024, 768] }
   end
 
   def self.threshold= (threshold)
