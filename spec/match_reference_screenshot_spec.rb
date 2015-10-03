@@ -15,9 +15,9 @@ describe "match_reference_screenshot" do
 
   context "helpers" do
     it "use proper paths" do
-      expect(reference_screenshot_path).to eq Pathname.new("spec/reference_screenshots/match_reference_screenshot/helpers/use_proper_paths/expected.png")
-      expect(test_path).to eq Pathname.new("tmp/spec/reference_screenshots/match_reference_screenshot/helpers/use_proper_paths/test.png")
-      expect(difference_path).to eq Pathname.new("tmp/spec/reference_screenshots/match_reference_screenshot/helpers/use_proper_paths/difference.png")
+      expect(reference_screenshot_path).to eq Pathname.new("spec/reference_screenshots/match_reference_screenshot/helpers/use_proper_paths/#{file_name('expected')}.png")
+      expect(test_path).to eq Pathname.new("tmp/spec/reference_screenshots/match_reference_screenshot/helpers/use_proper_paths/#{file_name('test')}.png")
+      expect(difference_path).to eq Pathname.new("tmp/spec/reference_screenshots/match_reference_screenshot/helpers/use_proper_paths/#{file_name('difference')}.png")
     end
   end
 
@@ -160,14 +160,14 @@ describe "match_reference_screenshot" do
           example_group: { description: "parent" }
         }
       end
-      Then { expect(@driver).to have_received(:save_screenshot).with(Pathname.new("tmp/spec/reference_screenshots/parent/test.png"), @opts) }
-      Then { expect(@error.message).to include "Missing reference screenshot spec/reference_screenshots/parent/expected.png" }
+      Then { expect(@driver).to have_received(:save_screenshot).with(Pathname.new("tmp/spec/reference_screenshots/parent/#{file_name('test')}.png"), @opts) }
+      Then { expect(@error.message).to include 'Missing reference screenshot spec/reference_screenshots/parent/expected' }
     end
 
     context "with page size configuration" do
       Given do
         RSpec::PageRegression.configure do |config|
-          config.viewports = [123, 456]
+          config.viewports = { small: [123, 456] }
         end
       end
       Then { expect(@driver).to have_received(:resize).with(123, 456) }
@@ -212,12 +212,12 @@ describe "match_reference_screenshot" do
   def create_existing_difference_image
   end
 
-  def use_test_screenshot(name)
-    use_fixture_screenshot(name, test_path)
+  def use_test_screenshot(name, suffix = nil)
+    use_fixture_screenshot(name, test_path(suffix))
   end
 
-  def use_reference_screenshot(name)
-    use_fixture_screenshot(name, reference_screenshot_path)
+  def use_reference_screenshot(name, suffix = nil)
+    use_fixture_screenshot(name, reference_screenshot_path(suffix))
   end
 
   def preexisting_difference_image

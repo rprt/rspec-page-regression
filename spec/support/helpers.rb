@@ -1,15 +1,15 @@
 module Helpers
 
-  def test_path
-    getpath(TestDir, "test")
+  def test_path(suffix = nil)
+    getpath(TestDir, file_name('test', suffix))
   end
 
-  def reference_screenshot_path
-    getpath(SpecDir, "expected")
+  def reference_screenshot_path(suffix = nil)
+    getpath(SpecDir, file_name('expected', suffix))
   end
 
-  def difference_path
-    getpath(TestDir, "difference")
+  def difference_path(suffix = nil)
+    getpath(TestDir, file_name('difference', suffix))
   end
 
   def getpath(root, base)
@@ -25,4 +25,9 @@ module Helpers
     group_path(metadata[:parent_example_group]) + metadata[:description].parameterize("_")
   end
 
+  def file_name(name, suffix = nil)
+    return name unless RSpec::PageRegression.viewports.size > 1
+    suffix ||= RSpec::PageRegression.viewports.first.first
+    "#{name}-#{suffix}"
+  end
 end

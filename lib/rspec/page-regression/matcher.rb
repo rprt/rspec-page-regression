@@ -16,10 +16,10 @@ module RSpec::PageRegression
       @comparisons.each do |comparison|
         next if comparison.result == :match
         msg +=  case comparison.result
-                  when :missing_reference_screenshot then "\nMissing expectation image #{comparison.filepaths.reference_screenshot}\n"
-                  when :missing_test_screenshot then "\nMissing test image #{comparison.filepaths.test_screenshot}\n"
-                  when :size_mismatch then "\nTest image size #{comparison.test_size.join('x')} does not match expectation #{comparison.expected_size.join('x')}\n"
-                  when :difference then "\nTest image does not match expected image\n"
+                  when :missing_reference_screenshot then "\nMissing reference screenshot #{comparison.filepaths.reference_screenshot}\n"
+                  when :missing_test_screenshot then "\nMissing test screenshot #{comparison.filepaths.test_screenshot}\n"
+                  when :size_mismatch then "\nTest screenshot size #{comparison.test_size.join('x')} does not match reference screenshot size #{comparison.expected_size.join('x')}\n"
+                  when :difference then "\nTest screenshot does not match reference screenshot\n"
                 end
 
         msg += "    $ #{viewer} #{comparison.filepaths.all.select(&:exist?).join(' ')}\n"

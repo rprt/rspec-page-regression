@@ -50,8 +50,9 @@ module RSpec::PageRegression
       description_ancestry(metadata[:parent_example_group]) << metadata[:description].parameterize("_")
     end
 
-    def file_name(prefix)
-      "#{prefix}-#{@viewport.first}.png"
+    def file_name(name)
+      return "#{name}.png" unless RSpec::PageRegression.viewports.size > 1
+      "#{name}-#{@viewport.first}.png"
     end
   end
 end
