@@ -10,7 +10,7 @@ module RSpec::PageRegression
       else
         page.driver.resize *filepaths.viewport.page_size
       end
-      page.driver.save_screenshot test_screenshot_path, :full => true
+      page.driver.save_screenshot test_screenshot_path, full: true
     end
 
     def self.render_responsive(page, responsive_filepaths)
