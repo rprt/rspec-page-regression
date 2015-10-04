@@ -52,7 +52,7 @@ module RSpec::PageRegression
 
     def file_name(name)
       return "#{name}.png" unless RSpec::PageRegression.viewports.size > 1
-      "#{name}-#{@viewport.first}.png"
+      "#{name}-#{@viewport.name}.png"
     end
   end
 end

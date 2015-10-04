@@ -27,7 +27,7 @@ module Helpers
 
   def file_name(name, suffix = nil)
     return name unless RSpec::PageRegression.viewports.size > 1
-    suffix ||= RSpec::PageRegression.viewports.first.first
+    suffix ||= RSpec::PageRegression.viewports.first.name
     "#{name}-#{suffix}"
   end
 end

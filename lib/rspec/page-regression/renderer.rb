@@ -6,9 +6,9 @@ module RSpec::PageRegression
       test_screenshot_path.dirname.mkpath unless test_screenshot_path.dirname.exist?
       # Capybara doesn't implement resize in API
       unless page.driver.respond_to? :resize
-        page.driver.browser.manage.window.resize_to *filepaths.viewport[1]
+        page.driver.browser.manage.window.resize_to *filepaths.viewport.size
       else
-        page.driver.resize *filepaths.viewport[1]
+        page.driver.resize *filepaths.viewport.size
       end
       page.driver.save_screenshot test_screenshot_path, :full => true
     end
