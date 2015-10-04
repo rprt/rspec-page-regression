@@ -1,14 +1,14 @@
-require 'spec_helper.rb'
+require 'spec_helper'
 require 'fileutils'
 
-describe "match_reference_screenshot" do
+describe 'match_reference_screenshot' do
 
   Given {
-    @opts = { :full => true }
-    @driver = mock("Driver")
+    @opts = { full: true }
+    @driver = mock('Driver')
     @driver.stubs :resize
     @driver.stubs :save_screenshot
-    @page = mock("Page")
+    @page = mock('Page')
     @page.stubs(:driver).returns @driver
     @match_argument = nil
   }
