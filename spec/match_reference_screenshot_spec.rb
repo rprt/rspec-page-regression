@@ -21,7 +21,6 @@ describe "match_reference_screenshot" do
     end
   end
 
-
   context "using expect().to" do
 
     When {
@@ -58,7 +57,6 @@ describe "match_reference_screenshot" do
 
       Then { expect(@error).to be_nil }
     end
-
 
     context "when files do not match" do
       Given { use_test_screenshot "A" }
@@ -165,16 +163,10 @@ describe "match_reference_screenshot" do
     end
 
     context "with viewport configuration" do
-      after do
-        RSpec::PageRegression.configure do |config|
-          config.viewports = { default: [1024, 768] }
-        end
-      end
-
       context "with one viewport" do
-        Given do
-          RSpec::PageRegression.configure do |config|
-            config.viewports = { small: [123, 456] }
+        around(:each) do |example|
+          with_config_viewports(small: [123, 456]) do
+             example.run
           end
         end
 
@@ -182,13 +174,12 @@ describe "match_reference_screenshot" do
       end
 
       context "with multiple viewports" do
-        Given do
-          RSpec::PageRegression.configure do |config|
-            config.viewports = { tablet: [1024, 768], mobile: [480, 320] }
+        around(:each) do |example|
+          with_config_viewports({ tablet: [1024, 768], mobile: [480, 320] }) do
+            use_test_screenshot('A', 'tablet')
+            use_test_screenshot('A', 'mobile')
+            example.run
           end
-
-          use_test_screenshot('A', 'tablet')
-          use_test_screenshot('A', 'mobile')
         end
 
         context 'should receive 2 resizes' do
@@ -263,9 +254,6 @@ describe "match_reference_screenshot" do
     FileUtils.cp fixture_screenshot(name), path
   end
 
-  def create_existing_difference_image
-  end
-
   def use_test_screenshot(name, suffix = nil)
     use_fixture_screenshot(name, test_path(suffix))
   end
@@ -289,5 +277,21 @@ describe "match_reference_screenshot" do
     }x
   end
 
+  def with_config_viewports(viewports)
+    defaults = RSpec::PageRegression.viewports
+    begin
+      RSpec::PageRegression.configure do |config|
+        config.viewports = viewports
+      end
+      yield
+    ensure
+      RSpec::PageRegression.configure do |config|
+        config.viewports = viewports_to_hash(defaults)
+      end
+    end
+  end
 
+  def viewports_to_hash(viewports)
+    viewports.map{ |vp| Hash[*vp] }.reduce(:merge)
+  end
 end
