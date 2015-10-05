@@ -1,20 +1,21 @@
-require "rspec/page-regression/file_paths"
-require "rspec/page-regression/image_comparison"
-require "rspec/page-regression/matcher"
-require "rspec/page-regression/renderer"
-require "rspec/page-regression/version"
+require 'rspec/page-regression/file_paths'
+require 'rspec/page-regression/image_comparison'
+require 'rspec/page-regression/matcher'
+require 'rspec/page-regression/renderer'
+require 'rspec/page-regression/version'
+require 'rspec/page-regression/viewport'
 
 module RSpec::PageRegression
   def self.configure
     yield self
   end
 
-  def self.page_size= (page_size)
-    @@page_size = page_size
+  def self.viewports= (viewports)
+    @@viewports = viewports.map{ |vp| Viewport.new(*vp) }
   end
 
-  def self.page_size
-    @@page_size ||= [1024, 768]
+  def self.viewports
+    @@viewports ||= [ Viewport.new(:default, [1024, 768]) ]
   end
 
   def self.threshold= (threshold)

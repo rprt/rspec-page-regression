@@ -10,6 +10,7 @@ module RSpec::PageRegression
     include ChunkyPNG::Color
 
     attr_reader :result
+    attr_reader :filepaths
 
     def initialize(filepaths)
       @filepaths = filepaths
