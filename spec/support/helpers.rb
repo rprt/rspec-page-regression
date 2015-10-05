@@ -78,6 +78,6 @@ module Helpers
   end
 
   def viewports_to_hash(viewports)
-    viewports.map{ |vp| Hash[*vp] }.reduce(:merge)
+    viewports.map{ |vp| Hash[vp.name, vp.size] }.reduce(:merge)
   end
 end
