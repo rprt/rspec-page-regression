@@ -8,22 +8,24 @@
 
 
 Rspec-page-regression is an [RSpec](https://github.com/rspec/rspec) plugin
-that makes it easy to headlessly regression test your web application pages to make sure the pages continue to look the way you expect them to look, taking into account HTML, CSS, and JavaScript.
+that makes it easy to regression test your web application pages to make sure the pages continue to look the way you expect them to look, taking into account HTML, CSS, and JavaScript.
 
 It provides an RSpec matcher that compares the test screenshot to a reference screenshot, and facilitates management of the screenshots.
 
-Rspec-page-regression uses [PhantomJS](http://www.phantomjs.org/) to headlessly render web page screenshots, by virtue of the [Poltergeist](https://github.com/jonleighton/poltergeist) driver for [Capybara](https://github.com/jnicklas/capybara).  You can also use the Selenium driver to test against real browsers.
+Rspec-page-regression can headlessly render the web page screenshots with [PhantomJS](http://www.phantomjs.org/), by virtue of the [Poltergeist](https://github.com/jonleighton/poltergeist) driver for [Capybara](https://github.com/jnicklas/capybara). Or, you can also use the [Selenium driver](https://rubygems.org/gems/selenium-webdriver) to do the same with real browsers.
 
-Rspec-page-regression is tested on ruby 1.9.3, 2.1.0, and jruby
+Rspec-page-regression is tested on ruby 1.9.3, 2.1.0 and jruby
 
 ## Installation
 
+### Headlessly with PhantomJS and Poltergeist
 
 Install PhantomJS as per [PhantomJS: Download and Install](http://phantomjs.org/download.html) and/or [Poltergeist: Installing PhantomJS](https://github.com/jonleighton/poltergeist#installing-phantomjs).  There are no other external dependencies (no need for Qt, nor an X server, nor ImageMagick, etc.)
 
 In your Gemfile:
 
     gem 'rspec-page-regression'
+    gem 'poltergeist'
 
 And in your spec_helper:
 
@@ -34,9 +36,27 @@ And in your spec_helper:
 	require 'capybara/poltergeist'
 	Capybara.javascript_driver = :poltergeist
 
-Rspec-page-regression presupposes the convention that your spec files are somwhere under a directory named `spec` (checked in to your repo), which has a sibling directory `tmp` (.gitignore'd)
+### Using the selenium driver
 
-To install for use with Selenium, [see instructions below](#selenium).
+You can also use the selenium driver with capybara. This offers the possiblity to visually test your pages against a range of real browsers. Add the [selenium-webdriver](https://rubygems.org/gems/selenium-webdriver) to your Gemfile:
+
+In your Gemfile:
+
+    gem 'rspec-page-regression'
+    gem 'selenium-webdriver'
+
+And in your spec_helper:
+
+    require 'rspec'  # or 'rspec/rails' if you're using Rails
+    require 'rspec/page-regression'
+
+	require 'capybara/rspec'
+	require 'selenium/webdriver'
+    Capybara.javascript_driver = :selenium
+
+
+Rspec-page-regression presupposes the convention that your spec files are somewhere under a directory named `spec` (checked in to your repo), which has a sibling directory `tmp` (.gitignore'd)
+
 
 #### Note on versions
 Rspec-page-regression has multiple versions that work in concert with the [significant changes in RSpec version 3](http://myronmars.to/n/dev-blog/2013/07/the-plan-for-rspec-3).  If you're using bundler, the gem dependencies should automatically find the proper version of rspec-page-regression for your chosen version of RSpec.
@@ -144,24 +164,6 @@ By default, a test fails if only a single pixel in the screenshot differs from t
     end
 
 This setting means that 1% of pixels are allowed to differ between the rendering result and the reference screenshot. For example, for an image size of 1024 x 768 and a threshold of 0.01, the maximum number of pixel differences between the images is 7864.
-
-## [Using the selenium driver](id:selenium)
-
-You can also use the selenium driver with capybara. This offers the possiblity to visually test your pages against a range of real browsers.
-
-Add the [selenium-webdriver](https://rubygems.org/gems/selenium-webdriver) to your Gemfile:
-
-    gem 'selenium-webdriver'
-
-And in your spec_helper replace:
-
-    require 'capybara/poltergeist'
-    Capybara.javascript_driver = :poltergeist
-
-With:
-
-    require 'selenium/webdriver'
-    Capybara.javascript_driver = :selenium
 
 
 See also the [capybara readme](https://github.com/jnicklas/capybara#selenium) and [selenium wiki](https://code.google.com/p/selenium/wiki/RubyBindings) for more information.
