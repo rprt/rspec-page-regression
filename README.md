@@ -22,7 +22,7 @@ You can use rspec-page-regression either headlessly (using PhantomJS and Polterg
 
 ### Headlessly using PhantomJS and Poltergeist
 
-Install PhantomJS as per [PhantomJS: Download and Install](http://phantomjs.org/download.html) and/or [Poltergeist: Installing PhantomJS](https://github.com/jonleighton/poltergeist#installing-phantomjs).  There are no other external dependencies (no need for Qt, nor an X server, nor ImageMagick, etc.).
+Install PhantomJS as per [PhantomJS: Download and Install](http://phantomjs.org/download.html) and/or [Poltergeist: Installing PhantomJS](https://github.com/jonleighton/poltergeist#installing-phantomjs).
 
 In your Gemfile:
 
