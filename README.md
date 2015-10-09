@@ -8,22 +8,26 @@
 
 
 Rspec-page-regression is an [RSpec](https://github.com/rspec/rspec) plugin
-that makes it easy to headlessly regression test your web application pages to make sure the pages continue to look the way you expect them to look, taking into account HTML, CSS, and JavaScript.
+that makes it easy to regression test your web application pages to make sure the pages continue to look the way you expect them to look, taking into account HTML, CSS, and JavaScript.
 
 It provides an RSpec matcher that compares the test screenshot to a reference screenshot, and facilitates management of the screenshots.
 
-Rspec-page-regression uses [PhantomJS](http://www.phantomjs.org/) to headlessly render web page screenshots, by virtue of the [Poltergeist](https://github.com/jonleighton/poltergeist) driver for [Capybara](https://github.com/jnicklas/capybara).  You can also use the Selenium driver to test against real browsers.
+Rspec-page-regression can headlessly render the web page screenshots with [PhantomJS](http://www.phantomjs.org/), by virtue of the [Poltergeist](https://github.com/jonleighton/poltergeist) driver for [Capybara](https://github.com/jnicklas/capybara). Or, you can also use the [Selenium driver](https://rubygems.org/gems/selenium-webdriver) to do the same with real browsers.
 
-Rspec-page-regression is tested on ruby 1.9.3, 2.1.0, and jruby
+Rspec-page-regression is tested on ruby 1.9.3, 2.1.0 and jruby.
 
 ## Installation
 
+You can use rspec-page-regression either headlessly (using PhantomJS and Poltergeist) or in a browser (using the selenium driver). Instructions are given for each:
 
-Install PhantomJS as per [PhantomJS: Download and Install](http://phantomjs.org/download.html) and/or [Poltergeist: Installing PhantomJS](https://github.com/jonleighton/poltergeist#installing-phantomjs).  There are no other external dependencies (no need for Qt, nor an X server, nor ImageMagick, etc.)
+### Headlessly using PhantomJS and Poltergeist
+
+Install PhantomJS as per [PhantomJS: Download and Install](http://phantomjs.org/download.html) and/or [Poltergeist: Installing PhantomJS](https://github.com/jonleighton/poltergeist#installing-phantomjs).
 
 In your Gemfile:
 
     gem 'rspec-page-regression'
+    gem 'poltergeist'
 
 And in your spec_helper:
 
@@ -34,31 +38,42 @@ And in your spec_helper:
 	require 'capybara/poltergeist'
 	Capybara.javascript_driver = :poltergeist
 
-Rspec-page-regression presupposes the convention that your spec files are somwhere under a directory named `spec` (checked in to your repo), which has a sibling directory `tmp` (.gitignore'd)
+### In browser, using the selenium driver
 
-To install for use with Selenium, [see instructions below](#selenium).
+To run in a browser, use the [selenium-webdriver](https://rubygems.org/gems/selenium-webdriver).
 
-#### Note on versions
-Rspec-page-regression has multiple versions that work in concert with the [significant changes in RSpec version 3](http://myronmars.to/n/dev-blog/2013/07/the-plan-for-rspec-3).  If you're using bundler, the gem dependencies should automatically find the proper version of rspec-page-regression for your chosen version of RSpec.
+In your Gemfile:
 
-| Rspec Version | Rspec-page-regression |
-| ------------- | --------------------- |
-| >= 3.0.*      | >= 0.3.0			    |
-| 2.99          | 0.2.99                |
-| <= 2.14.*     | <= 0.2.1              |
+    gem 'rspec-page-regression'
+    gem 'selenium-webdriver'
 
+And in your spec_helper:
 
-### Upgrading from rspec-page-regression v0.4 to v1.0
+    require 'rspec'  # or 'rspec/rails' if you're using Rails
+    require 'rspec/page-regression'
+
+	require 'capybara/rspec'
+	require 'selenium/webdriver'
+    Capybara.javascript_driver = :selenium
+
+See also the [capybara readme](https://github.com/jnicklas/capybara#selenium) and [selenium wiki](https://code.google.com/p/selenium/wiki/RubyBindings) for more information.
+
+## Upgrading from rspec-page-regression v0.4 to v1.0
+
 * Rename all uses of `match_expectation` to `match_reference_screenshot` in your sources.
-* Delete the directories `spec/expectation` and `tmp/spec/expectation`
-* Make sure that the configuration flag `autocreate_reference_screenshots` is set to true (this is the default). # TODO: Depends on finishing issue #22
+* Delete the directories `spec/expectation` and `tmp/spec/expectation`.
+* Make sure that the configuration flag `autocreate_reference_screenshots` is set to true (this is the default). # TODO: Depends on finishing issue #22.
 * Run all specs. A new directory `reference_screenshots` directory with up to date screenshots will be created automatically.
 * Check that all screenshots look ok prior to committing them.
+
+## Directory Structure
+
+Rspec-page-regression presupposes the convention that your spec files are somewhere under a directory named `spec` (checked in to your repo), which has a sibling directory `tmp` (.gitignore'd).
 
 ## Usage
 
 Rspec-page-regression provides a matcher that renders the page, takes a screenshot and compares
-it against a reference screenshots.  To use it, you need to enable Capybara and Poltergeist by specifying `:type => :feature` and `:js => true`:
+it against a reference screenshots.  To use it, you need to enable Capybara with Poltergeist or Selenium by specifying `:type => :feature` and `:js => true`:
 
     require 'spec_helper'
 
@@ -104,7 +119,7 @@ First view the test image to make sure it really is what you expect.  Then copy 
 
 If you've deliberatly changed something that affects the look of your web page, your regression test will fail.  The "test" image will contain the new look, and the "expected" image will contain the old.
 
-Once you've visually checked the test image to make sure it's really what you want, then simply copy the test image over the old reference screenshot.  (And then of course commit it it into your repository.)
+Once you've visually checked the test image to make sure it's really what you want, then simply copy the test image over the old reference screenshot. (And then of course commit it it into your repository.)
 
 The failure message doesn't include a ready-to-copy-and-paste `cp` command, but you can copy and paste the individual file paths from the message.  (The reason not to have a ready-to-copy-and-paste command is if the failure is real, it shouldn't be too easy to mindlessly copy and paste to make it go away.)
 
@@ -122,7 +137,7 @@ Everything will work normally, and the failure messages will refer to your path.
 
 ### Window size
 
-The default window size for the renders is 1024 x 768 pixels.  You can specify another size as `[height, width]` in pixels:
+The default window size for the renders is 1024 x 768 pixels.  You can specify another size or multiple sizes as name and value pairs. The value is an array `[height and width]` of the size in pixels.
 
      # in spec_helper.rb:
      RSpec::PageRegression.configure do |config|
@@ -145,26 +160,6 @@ By default, a test fails if only a single pixel in the screenshot differs from t
 
 This setting means that 1% of pixels are allowed to differ between the rendering result and the reference screenshot. For example, for an image size of 1024 x 768 and a threshold of 0.01, the maximum number of pixel differences between the images is 7864.
 
-## [Using the selenium driver](id:selenium)
-
-You can also use the selenium driver with capybara. This offers the possiblity to visually test your pages against a range of real browsers.
-
-Add the [selenium-webdriver](https://rubygems.org/gems/selenium-webdriver) to your Gemfile:
-
-    gem 'selenium-webdriver'
-
-And in your spec_helper replace:
-
-    require 'capybara/poltergeist'
-    Capybara.javascript_driver = :poltergeist
-
-With:
-
-    require 'selenium/webdriver'
-    Capybara.javascript_driver = :selenium
-
-
-See also the [capybara readme](https://github.com/jnicklas/capybara#selenium) and [selenium wiki](https://code.google.com/p/selenium/wiki/RubyBindings) for more information.
 
 ## Contributing
 
