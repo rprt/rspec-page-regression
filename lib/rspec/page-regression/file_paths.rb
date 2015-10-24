@@ -36,14 +36,19 @@ module RSpec::PageRegression
       [test_screenshot, reference_screenshot, difference_image]
     end
 
-    def self.responsive_file_paths(example, reference_screenshot_path = nil)
-      RSpec::PageRegression.viewports.map do |viewport|
+    def self.responsive_file_paths(example, args)
+      reference_screenshot_path = args.is_a?(String) ? args : args[:reference_screenshot_path]
+      viewports.map do |viewport|
         new(example, viewport, reference_screenshot_path)
       end
     end
 
 
     private
+
+    def self.viewports
+      RSpec::PageRegression.viewports
+    end
 
     def description_ancestry(metadata)
       return [] if metadata.nil?

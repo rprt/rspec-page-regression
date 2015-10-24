@@ -1,11 +1,11 @@
 require 'which_works'
 
 module RSpec::PageRegression
-
-  RSpec::Matchers.define :match_reference_screenshot do |reference_screenshot_path|
+  RSpec::Matchers.define :match_reference_screenshot do |args|
 
     match do |page|
-      @responsive_filepaths = FilePaths.responsive_file_paths(RSpec.current_example, reference_screenshot_path)
+      args ||= {}
+      @responsive_filepaths = FilePaths.responsive_file_paths(RSpec.current_example, args)
       Renderer.render_responsive(page, @responsive_filepaths)
       @comparisons = @responsive_filepaths.map{ |filepaths| ImageComparison.new(filepaths) }
       @comparisons.each { |comparison| return false unless comparison.result == :match }
