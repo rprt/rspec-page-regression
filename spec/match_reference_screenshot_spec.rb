@@ -24,7 +24,7 @@ describe 'match_reference_screenshot' do
 
     context 'with viewport config' do
       around(:each) do |example|
-        with_config_viewports({ tablet: [1024, 768], mobile: [480, 320] }) do
+        with_config_viewports(viewports: { tablet: [1024, 768], mobile: [480, 320] }) do
           example.run
         end
       end
@@ -184,7 +184,7 @@ describe 'match_reference_screenshot' do
     context "with viewport configuration" do
       context "with one viewport" do
         around(:each) do |example|
-          with_config_viewports(small: [123, 456]) do
+          with_config_viewports(viewports: { small: [123, 456] }) do
              example.run
           end
         end
@@ -194,7 +194,7 @@ describe 'match_reference_screenshot' do
 
       context "with multiple viewports" do
         around(:each) do |example|
-          with_config_viewports({ tablet: [1024, 768], mobile: [480, 320] }) do
+          with_config_viewports(viewports: { tablet: [1024, 768], mobile: [480, 320] }) do
             use_test_screenshot('A', 'tablet')
             use_test_screenshot('A', 'mobile')
             example.run
