@@ -160,15 +160,6 @@ describe 'match_reference_screenshot' do
       end
     end
 
-    context "with match argument" do
-      Given { @match_argument = "/this/is/a/test.png" }
-      Then { expect(@error.message).to include "Missing reference screenshot /this/is/a/test.png" }
-      context "with previously-created difference image" do
-        Given { preexisting_difference_image }
-        Then { expect(difference_path).to_not be_exist }
-      end
-    end
-
     context "with trivial example description" do
       Given do
         RSpec::Core::Example.any_instance.stubs :metadata => {
