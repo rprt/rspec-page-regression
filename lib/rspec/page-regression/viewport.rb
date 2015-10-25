@@ -4,4 +4,8 @@ class Viewport
     @name = name
     @size = size
   end
+
+  def is_included_in?(args)
+    Array(args).include?(self.name)
+  end
 end

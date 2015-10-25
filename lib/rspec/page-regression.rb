@@ -20,8 +20,8 @@ module RSpec::PageRegression
     @@viewports ||= [ Viewport.new(:default, [1024, 768]) ]
   end
 
-  def self.default_viewports=(viewports)
-    @@default_viewports = viewports.map{ |vp| Viewport.new(*vp) }
+  def self.default_viewports=(defaults)
+    @@default_viewports = viewports.reject { |x| !x.is_included_in?(defaults) }
   end
 
   def self.default_viewports

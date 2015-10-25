@@ -37,8 +37,8 @@ module RSpec::PageRegression
     end
 
     def self.responsive_file_paths(example, args)
-      reference_screenshot_path = args.is_a?(String) ? args : args[:reference_screenshot_path]
-      viewports.map do |viewport|
+      reference_screenshot_path = args if args.is_a?(String)
+      viewports(args).map do |viewport|
         new(example, viewport, reference_screenshot_path)
       end
     end
@@ -46,8 +46,14 @@ module RSpec::PageRegression
 
     private
 
-    def self.viewports
-      RSpec::PageRegression.viewports
+    def self.viewports(args)
+      return RSpec::PageRegression.default_viewports if args.empty?
+      configured = RSpec::PageRegression.viewports
+      if only = args[:viewport]
+        configured.reject { |x| !x.is_included_in?(only) }
+      elsif except = args[:except_viewport]
+        configured.reject { |x| x.is_included_in?(except) }
+      end
     end
 
     def description_ancestry(metadata)
