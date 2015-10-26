@@ -1,5 +1,23 @@
 module Helpers
 
+  def initialize_spec
+    @opts = { full: true }
+    @driver = mock('Driver')
+    @driver.stubs :resize
+    @driver.stubs :save_screenshot
+    @page = mock('Page')
+    @page.stubs(:driver).returns @driver
+    @match_argument = nil
+  end
+
+  def expect_to_statement
+    begin
+      expect(@page).to match_reference_screenshot @match_argument
+    rescue RSpec::Expectations::ExpectationNotMetError => e
+      @error = e
+    end
+  end
+
   def test_path(suffix = nil)
     getpath(TestDir, file_name('test', suffix))
   end
