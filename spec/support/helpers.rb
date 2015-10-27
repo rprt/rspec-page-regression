@@ -7,12 +7,11 @@ module Helpers
     @driver.stubs :save_screenshot
     @page = mock('Page')
     @page.stubs(:driver).returns @driver
-    @match_argument = nil
   end
 
-  def expect_to_statement
+  def expect_to_statement(match_argument = nil)
     begin
-      expect(@page).to match_reference_screenshot @match_argument
+      expect(@page).to match_reference_screenshot match_argument
     rescue RSpec::Expectations::ExpectationNotMetError => e
       @error = e
     end

@@ -3,9 +3,10 @@ require 'fileutils'
 
 describe 'match_reference_screenshot with viewport management' do
   Given { initialize_spec }
-  When { expect_to_statement }
 
   context 'with config.viewports configuration' do
+    When { expect_to_statement }
+
     context 'with one viewport' do
       around(:each) do |example|
         with_config_viewports(viewports: { small: [123, 456] }) do
@@ -58,6 +59,49 @@ describe 'match_reference_screenshot with viewport management' do
         Then { expect(@error.message).to include "#{reference_screenshot_path('mobile')}" }
         Then { expect(@error.message).to_not include "#{reference_screenshot_path('tablet')}" }
       end
+    end
+  end
+
+  context 'with config.viewports and config.default_viewports' do
+    around(:each) do |example|
+      viewports = { wide: [1440, 990], large: [1280, 720], medium: [1024, 768], small: [480, 320] }
+      defaults = [:small, :medium]
+      with_config_viewports(viewports: viewports, default_viewports: defaults) do
+        example.run
+      end
+    end
+
+    context 'should receive 2 resizes' do
+      When { expect_to_statement }
+      Then { expect(@driver).to have_received(:resize).with(1024, 768) }
+      Then { expect(@driver).to have_received(:resize).with(480, 320) }
+    end
+
+    context 'choose a different viewport for a match statement' do
+      match_argument = { viewport: :wide }
+      When { expect_to_statement(match_argument) }
+      Then { expect(@driver).to have_received(:resize).with(1440, 990) }
+    end
+
+    context 'choose different viewports for match a statement' do
+      match_argument = { viewport: [:wide, :large] }
+      When { expect_to_statement(match_argument) }
+      Then { expect(@driver).to have_received(:resize).with(1440, 990) }
+      Then { expect(@driver).to have_received(:resize).with(1280, 720) }
+    end
+
+    context 'leave out a viewport for a match statement' do
+      match_argument = { except_viewport: :small }
+      When { expect_to_statement(match_argument) }
+      Then { expect(@driver).to have_received(:resize).with(1440, 990) }
+      Then { expect(@driver).to have_received(:resize).with(1280, 720) }
+      Then { expect(@driver).to have_received(:resize).with(1024, 768) }
+    end
+
+    context 'leave out multiple viewports for a match statement' do
+      match_argument = { except_viewport: [:wide, :large, :medium] }
+      When { expect_to_statement(match_argument) }
+      Then { expect(@driver).to have_received(:resize).with(480, 320) }
     end
   end
 end
