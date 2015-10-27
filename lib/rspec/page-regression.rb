@@ -6,7 +6,7 @@ require 'rspec/page-regression/version'
 require 'rspec/page-regression/viewport'
 
 module RSpec::PageRegression
-  ALLOWED_ARGS = [:reference_screenshot_path, :viewport, :except_viewport]
+  ALLOWED_ARGS = [:viewport, :except_viewport]
 
   def self.configure
     yield self

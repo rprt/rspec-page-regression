@@ -43,7 +43,7 @@ module RSpec::PageRegression
     private
 
     def self.viewports(args)
-      return RSpec::PageRegression.default_viewports if args.is_a?(String) or args.empty?
+      return RSpec::PageRegression.default_viewports if args.empty?
       configured = RSpec::PageRegression.viewports
       if only = args[:viewport]
         configured.reject { |x| !x.is_included_in?(only) }
