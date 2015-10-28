@@ -4,6 +4,11 @@ require 'fileutils'
 describe 'match_reference_screenshot with viewport management' do
   Given { initialize_spec }
 
+  context 'with invalid arguments' do
+    Then { expect{ expect_to_statement(invalid: :argument) }.to raise_error(ArgumentError) }
+    Then { expect{ expect_to_statement('invalid_argument') }.to raise_error(ArgumentError) }
+  end
+
   context 'with config.viewports configuration' do
     When { expect_to_statement }
 

@@ -5,6 +5,7 @@ module RSpec::PageRegression
 
     match do |page|
       args ||= {}
+      verify_arguments(args)
       @responsive_filepaths = FilePaths.responsive_file_paths(RSpec.current_example, args)
       Renderer.render_responsive(page, @responsive_filepaths)
       @comparisons = @responsive_filepaths.map{ |filepaths| ImageComparison.new(filepaths) }
@@ -39,6 +40,11 @@ module RSpec::PageRegression
 
     def viewer
       File.basename(Which.which('open', 'feh', 'display', array: true).first || 'viewer')
+    end
+
+    def verify_arguments(args)
+      return if args.is_a?(Hash) && (args.keys - ALLOWED_ARGS).empty?
+      raise ArgumentError, "Invalid argument: Allowed arguments are #{ALLOWED_ARGS}"
     end
   end
 end
