@@ -34,9 +34,9 @@ And in your spec_helper:
     require 'rspec'  # or 'rspec/rails' if you're using Rails
     require 'rspec/page-regression'
 
-	require 'capybara/rspec'
-	require 'capybara/poltergeist'
-	Capybara.javascript_driver = :poltergeist
+    require 'capybara/rspec'
+    require 'capybara/poltergeist'
+    Capybara.javascript_driver = :poltergeist
 
 ### In browser, using the selenium driver
 
@@ -52,8 +52,8 @@ And in your spec_helper:
     require 'rspec'  # or 'rspec/rails' if you're using Rails
     require 'rspec/page-regression'
 
-	require 'capybara/rspec'
-	require 'selenium/webdriver'
+    require 'capybara/rspec'
+    require 'selenium/webdriver'
     Capybara.javascript_driver = :selenium
 
 See also the [capybara readme](https://github.com/jnicklas/capybara#selenium) and [selenium wiki](https://code.google.com/p/selenium/wiki/RubyBindings) for more information.
@@ -103,6 +103,8 @@ Notice that the second line gives a command you can copy and paste in order to v
 
 It also shows a "difference image" in which each pixel contains the per-channel absolute difference between the test and expected images.  That is, the difference images is black everywhere except has some funky colored pixels where the test and expected images differ.  To help you locate those, it also has a red bounding box drawn around the region with differences.
 
+**Note** Read [CONFIGURATION](#configuration) section for more.
+
 ### How do I create reference screenshots?
 
 The easiest way to create a reference screenshot is to run the test for the first time and let it fail.  You'll then get a failure message like:
@@ -127,12 +129,6 @@ The failure message doesn't include a ready-to-copy-and-paste `cp` command, but 
 
 As per the above examples, the reference screenshots default to being stored under `spec/reference_screenshots`, with the remainder of the path constructed from the example group descriptions. (If the `it` also has a description it will be used as well.)
 
-If that default scheme doesn't suit you, you can pass a path to where the reference screenshot should be found:
-
-    expect(page).to match_reference_screenshot "/path/to/my/screenshot.png"
-
-Everything will work normally, and the failure messages will refer to your path.
-
 ## Configuration
 
 ### Window size
@@ -142,13 +138,26 @@ The default window size for the renders is 1024 x 768 pixels.  You can specify a
      # in spec_helper.rb:
      RSpec::PageRegression.configure do |config|
        config.viewports = {
-                            desktop: [1280, 1024],
-                            tablet: [1024, 768],
-                            mobile: [480, 320]
+                            large: [1280, 1024],
+                            medium: [1024, 768],
+                            small: [640, 360],
+                            tiny: [480, 320]
                           }
      end
 
-Note that this specifies the size of the browser window viewport; but rspec-page-regression requests a render of the full page, which might extend beyond the window.  So the rendered file dimensions may be larger than this configuration value.
+You can also specify a subset of the `config.viewports` as default behaviour.
+
+    config.default_viewports = [:large, :medium, :small]
+
+All your test will run against these default viewports. You can also override the default viewport(s) for an `expect` statement with the following option:
+
+    expect(page).to match_reference_screenshot viewport: :tiny
+    expect(page).to match_reference_screenshot viewport: [:tiny, :small]
+
+    expect(page).to match_reference_screenshot except_viewport: :large
+    expect(page).to match_reference_screenshot except_viewport: [:tiny, :large]
+
+**Note** All the sizes are for the browser window viewport. `rspec-page-regression` requests a render of the full page, which might extend beyond the window. So, the rendered file dimensions may be larger than this configuration value.
 
 ### Image difference threshold
 
