@@ -88,20 +88,20 @@ describe 'match_reference_screenshot with viewport management' do
       end
 
       context 'choose different viewports for match a statement' do
-        Given(:argument) { Hash(viewport: [:wide, :large]) }
+        Given(:argument) { { viewport: [:wide, :large] } }
         Then { expect(@driver).to have_received(:resize).with(1440, 990) }
         Then { expect(@driver).to have_received(:resize).with(1280, 720) }
       end
 
       context 'leave out a viewport for a match statement' do
-        Given(:argument) { Hash(except_viewport: :small) }
+        Given(:argument) { { except_viewport: :small } }
         Then { expect(@driver).to have_received(:resize).with(1440, 990) }
         Then { expect(@driver).to have_received(:resize).with(1280, 720) }
         Then { expect(@driver).to have_received(:resize).with(1024, 768) }
       end
 
       context 'leave out multiple viewports for a match statement' do
-        Given(:argument) { Hash(except_viewport: [:wide, :large, :medium]) }
+        Given(:argument) { { except_viewport: [:wide, :large, :medium] } }
         Then { expect(@driver).to have_received(:resize).with(480, 320) }
       end
     end
