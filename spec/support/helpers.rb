@@ -9,9 +9,9 @@ module Helpers
     @page.stubs(:driver).returns @driver
   end
 
-  def expect_to_statement(match_argument = nil)
+  def perform_screenshot_match(argument = nil)
     begin
-      expect(@page).to match_reference_screenshot match_argument
+      expect(@page).to match_reference_screenshot argument
     rescue RSpec::Expectations::ExpectationNotMetError => e
       @error = e
     end

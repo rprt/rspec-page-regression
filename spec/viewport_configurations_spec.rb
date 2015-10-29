@@ -4,13 +4,13 @@ require 'fileutils'
 describe 'match_reference_screenshot with viewport management' do
   Given { initialize_spec }
   context 'with invalid arguments' do
-    Then { expect{ expect_to_statement(invalid: :argument) }.to raise_error(ArgumentError) }
-    Then { expect{ expect_to_statement('invalid_argument') }.to raise_error(ArgumentError) }
+    Then { expect{ perform_screenshot_match(invalid: :argument) }.to raise_error(ArgumentError) }
+    Then { expect{ perform_screenshot_match('invalid_argument') }.to raise_error(ArgumentError) }
   end
 
   context 'with valid arguments' do
-    Given(:match_argument) { nil }
-    When { expect_to_statement(match_argument) }
+    Given(:argument) { nil }
+    When { perform_screenshot_match(argument) }
 
     context 'with config.viewports configuration' do
       context 'with one viewport' do
@@ -83,25 +83,25 @@ describe 'match_reference_screenshot with viewport management' do
       end
 
       context 'choose a different viewport for a match statement' do
-        Given(:match_argument) { { viewport: :wide } }
+        Given(:argument) { { viewport: :wide } }
         Then { expect(@driver).to have_received(:resize).with(1440, 990) }
       end
 
       context 'choose different viewports for match a statement' do
-        Given(:match_argument) { Hash(viewport: [:wide, :large]) }
+        Given(:argument) { Hash(viewport: [:wide, :large]) }
         Then { expect(@driver).to have_received(:resize).with(1440, 990) }
         Then { expect(@driver).to have_received(:resize).with(1280, 720) }
       end
 
       context 'leave out a viewport for a match statement' do
-        Given(:match_argument) { Hash(except_viewport: :small) }
+        Given(:argument) { Hash(except_viewport: :small) }
         Then { expect(@driver).to have_received(:resize).with(1440, 990) }
         Then { expect(@driver).to have_received(:resize).with(1280, 720) }
         Then { expect(@driver).to have_received(:resize).with(1024, 768) }
       end
 
       context 'leave out multiple viewports for a match statement' do
-        Given(:match_argument) { Hash(except_viewport: [:wide, :large, :medium]) }
+        Given(:argument) { Hash(except_viewport: [:wide, :large, :medium]) }
         Then { expect(@driver).to have_received(:resize).with(480, 320) }
       end
     end

@@ -5,7 +5,7 @@ describe 'match_reference_screenshot' do
   Given { initialize_spec }
 
   context "using expect().to" do
-    When { expect_to_statement }
+    When { perform_screenshot_match }
 
     context "framework" do
       Then { expect(@driver).to have_received(:resize).with(1024, 768) }
