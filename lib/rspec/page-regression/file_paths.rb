@@ -45,9 +45,9 @@ module RSpec::PageRegression
     def self.viewports(args)
       all = RSpec::PageRegression.viewports
       if only = args[:viewport]
-        all.select { |x| x.is_included_in?(only) }
+        all.select { |vp| vp.is_included_in?(only) }
       elsif except = args[:except_viewport]
-        all.reject { |x| x.is_included_in?(except) }
+        all.reject { |vp| vp.is_included_in?(except) }
       else
         RSpec::PageRegression.default_viewports
       end

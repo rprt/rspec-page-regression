@@ -21,7 +21,7 @@ module RSpec::PageRegression
   end
 
   def self.default_viewports=(defaults)
-    @@default_viewports = viewports.reject { |x| !x.is_included_in?(defaults) }
+    @@default_viewports = viewports.select { |vp| vp.is_included_in?(defaults) }
   end
 
   def self.default_viewports
