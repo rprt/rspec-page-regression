@@ -1,11 +1,12 @@
 require 'which_works'
 
 module RSpec::PageRegression
-
-  RSpec::Matchers.define :match_reference_screenshot do |reference_screenshot_path|
+  RSpec::Matchers.define :match_reference_screenshot do |args|
 
     match do |page|
-      @responsive_filepaths = FilePaths.responsive_file_paths(RSpec.current_example, reference_screenshot_path)
+      args ||= {}
+      verify_arguments(args)
+      @responsive_filepaths = FilePaths.responsive_file_paths(RSpec.current_example, args)
       Renderer.render_responsive(page, @responsive_filepaths)
       @comparisons = @responsive_filepaths.map{ |filepaths| ImageComparison.new(filepaths) }
       @comparisons.each { |comparison| return false unless comparison.result == :match }
@@ -39,6 +40,11 @@ module RSpec::PageRegression
 
     def viewer
       File.basename(Which.which('open', 'feh', 'display', array: true).first || 'viewer')
+    end
+
+    def verify_arguments(args)
+      return if args.is_a?(Hash) && (args.keys - ALLOWED_ARGS).empty?
+      raise ArgumentError, "Invalid argument: Allowed arguments are #{ALLOWED_ARGS}"
     end
   end
 end

@@ -7,17 +7,14 @@ module RSpec::PageRegression
     attr_reader :difference_image
     attr_reader :viewport
 
-    def initialize(example, viewport, reference_screenshot_path = nil)
-      reference_screenshot_path = Pathname.new(reference_screenshot_path) if reference_screenshot_path
-
+    def initialize(example, viewport)
       descriptions = description_ancestry(example.metadata[:example_group])
       descriptions.push example.description unless example.description.parameterize('_') =~ %r{
         ^
         (then_+)?
         ( (expect_+) (page_+) (to_+) (not_+)? | (page_+) (should_+)? )
         match_reference_screenshot
-        (_#{Regexp.escape(reference_screenshot_path.to_s)})?
-          $
+        $
       }xi
       canonical_path = descriptions.map{|s| s.parameterize('_')}.inject(Pathname.new(''), &:+)
 
@@ -27,7 +24,7 @@ module RSpec::PageRegression
       cwd = Pathname.getwd
 
       @viewport = viewport
-      @reference_screenshot = reference_screenshot_path || (reference_root + canonical_path + file_name('expected')).relative_path_from(cwd)
+      @reference_screenshot = (reference_root + canonical_path + file_name('expected')).relative_path_from(cwd)
       @test_screenshot = (test_root + canonical_path + file_name('test')).relative_path_from cwd
       @difference_image = (test_root + canonical_path + file_name('difference')).relative_path_from cwd
     end
@@ -36,14 +33,25 @@ module RSpec::PageRegression
       [test_screenshot, reference_screenshot, difference_image]
     end
 
-    def self.responsive_file_paths(example, reference_screenshot_path = nil)
-      RSpec::PageRegression.viewports.map do |viewport|
-        new(example, viewport, reference_screenshot_path)
+    def self.responsive_file_paths(example, args)
+      viewports(args).map do |viewport|
+        new(example, viewport)
       end
     end
 
 
     private
+
+    def self.viewports(args)
+      all = RSpec::PageRegression.viewports
+      if only = args[:viewport]
+        all.select { |vp| vp.is_included_in?(only) }
+      elsif except = args[:except_viewport]
+        all.reject { |vp| vp.is_included_in?(except) }
+      else
+        RSpec::PageRegression.default_viewports
+      end
+    end
 
     def description_ancestry(metadata)
       return [] if metadata.nil?

@@ -1,5 +1,22 @@
 module Helpers
 
+  def initialize_spec
+    @opts = { full: true }
+    @driver = mock('Driver')
+    @driver.stubs :resize
+    @driver.stubs :save_screenshot
+    @page = mock('Page')
+    @page.stubs(:driver).returns @driver
+  end
+
+  def perform_screenshot_match(argument = nil)
+    begin
+      expect(@page).to match_reference_screenshot argument
+    rescue RSpec::Expectations::ExpectationNotMetError => e
+      @error = e
+    end
+  end
+
   def test_path(suffix = nil)
     getpath(TestDir, file_name('test', suffix))
   end
@@ -63,16 +80,18 @@ module Helpers
     }x
   end
 
-  def with_config_viewports(viewports)
-    defaults = RSpec::PageRegression.viewports
+  def with_config_viewports(args)
+    pre_config = RSpec::PageRegression.viewports
     begin
       RSpec::PageRegression.configure do |config|
-        config.viewports = viewports
+        config.viewports = args[:viewports]
+        config.default_viewports = args[:default_viewports] || args[:viewports].keys
       end
       yield
     ensure
       RSpec::PageRegression.configure do |config|
-        config.viewports = viewports_to_hash(defaults)
+        config.viewports = viewports_to_hash(pre_config)
+        config.default_viewports = pre_config.map(&:name)
       end
     end
   end

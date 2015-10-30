@@ -6,11 +6,13 @@ require 'rspec/page-regression/version'
 require 'rspec/page-regression/viewport'
 
 module RSpec::PageRegression
+  ALLOWED_ARGS = [:viewport, :except_viewport]
+
   def self.configure
     yield self
   end
 
-  def self.viewports= (viewports)
+  def self.viewports=(viewports)
     @@viewports = viewports.map{ |vp| Viewport.new(*vp) }
   end
 
@@ -18,7 +20,15 @@ module RSpec::PageRegression
     @@viewports ||= [ Viewport.new(:default, [1024, 768]) ]
   end
 
-  def self.threshold= (threshold)
+  def self.default_viewports=(defaults)
+    @@default_viewports = viewports.select { |vp| vp.is_included_in?(defaults) }
+  end
+
+  def self.default_viewports
+    @@default_viewports ||= viewports
+  end
+
+  def self.threshold=(threshold)
     @@threshold = threshold
   end
 
