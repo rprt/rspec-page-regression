@@ -10,7 +10,8 @@ module RSpec::PageRegression
       else
         page.driver.resize *filepaths.viewport.size
       end
-      options[:full] = true unless options.key?(:selector)
+      options = { full: true }.merge(options)
+      options.delete(:full) if options.key?(:selector)
       page.driver.save_screenshot test_screenshot_path, options
     end
 

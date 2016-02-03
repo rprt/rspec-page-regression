@@ -36,6 +36,12 @@ describe 'match_reference_screenshot' do
       context "without selector" do
         Then { expect(@driver).to have_received(:save_screenshot).with(anything, full: true) }
       end
+
+      context "with full: false" do
+        Given { @args = { full: false } }
+
+        Then { expect(@driver).to have_received(:save_screenshot).with(anything, full: false) }
+      end
     end
 
     context "when files match" do
