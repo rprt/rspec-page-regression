@@ -5,7 +5,8 @@ describe 'match_reference_screenshot' do
   Given { initialize_spec }
 
   context "using expect().to" do
-    When { perform_screenshot_match }
+    Given { @args = nil }
+    When { perform_screenshot_match(@args) }
 
     context "framework" do
       Then { expect(@driver).to have_received(:resize).with(1024, 768) }
@@ -24,6 +25,22 @@ describe 'match_reference_screenshot' do
         }
 
         Then { expect(@window).to have_received(:resize_to).with(1024, 768) }
+      end
+
+      context "with selector" do
+        Given { @args = { selector: "#foo" } }
+
+        Then { expect(@driver).to have_received(:save_screenshot).with(anything, selector: "#foo") }
+      end
+
+      context "without selector" do
+        Then { expect(@driver).to have_received(:save_screenshot).with(anything, full: true) }
+      end
+
+      context "with full: false" do
+        Given { @args = { full: false } }
+
+        Then { expect(@driver).to have_received(:save_screenshot).with(anything, full: false) }
       end
     end
 

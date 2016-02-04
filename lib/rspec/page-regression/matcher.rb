@@ -7,7 +7,10 @@ module RSpec::PageRegression
       args ||= {}
       verify_arguments(args)
       @responsive_filepaths = FilePaths.responsive_file_paths(RSpec.current_example, args)
-      Renderer.render_responsive(page, @responsive_filepaths)
+
+      opt = args.select { |k,_| RENDER_ARGS.include?(k) }
+
+      Renderer.render_responsive(page, @responsive_filepaths, opt)
       @comparisons = @responsive_filepaths.map{ |filepaths| ImageComparison.new(filepaths) }
       @comparisons.each { |comparison| return false unless comparison.result == :match }
     end

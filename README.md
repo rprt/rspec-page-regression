@@ -105,6 +105,23 @@ It also shows a "difference image" in which each pixel contains the per-channel 
 
 **Note** Read [CONFIGURATION](#configuration) section for more.
 
+### May I match a part of a page?
+
+You can use `selector` option to specify area to match: 
+
+```ruby
+    require 'spec_helper'
+
+    describe "my page", :type => :feature, :js => true do
+
+      before(:each) do
+        visit my_page_path
+      end
+
+      it { expect(page).to match_reference_screenshot(selector: '#foo') }
+    end
+```
+
 ### How do I create reference screenshots?
 
 The easiest way to create a reference screenshot is to run the test for the first time and let it fail.  You'll then get a failure message like:
