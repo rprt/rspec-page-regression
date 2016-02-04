@@ -6,6 +6,7 @@ module RSpec::PageRegression
     match do |page|
       args ||= {}
       verify_arguments(args)
+
       @responsive_filepaths = FilePaths.responsive_file_paths(RSpec.current_example, args)
 
       opt = args.select { |k,_| RENDER_ARGS.include?(k) }

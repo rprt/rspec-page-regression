@@ -24,9 +24,10 @@ module RSpec::PageRegression
       cwd = Pathname.getwd
 
       @viewport = viewport
-      @reference_screenshot = (reference_root + canonical_path + file_name('expected', options)).relative_path_from(cwd)
-      @test_screenshot = (test_root + canonical_path + file_name('test', options)).relative_path_from cwd
-      @difference_image = (test_root + canonical_path + file_name('difference', options)).relative_path_from cwd
+      suffixes = build_suffixes(options)
+      @reference_screenshot = (reference_root + canonical_path + file_name('expected', *suffixes)).relative_path_from(cwd)
+      @test_screenshot = (test_root + canonical_path + file_name('test', *suffixes)).relative_path_from cwd
+      @difference_image = (test_root + canonical_path + file_name('difference', *suffixes)).relative_path_from cwd
     end
 
     def all
@@ -39,8 +40,22 @@ module RSpec::PageRegression
       end
     end
 
-
     private
+
+    def build_suffixes(args)
+      arr = []
+      arr << @viewport.name if RSpec::PageRegression.viewports.size > 1
+      arr << args[:label].to_s if args.key?(:label)
+      arr << build_suffix_from_selector(args[:selector]) if args.key?(:selector)
+      arr
+    end
+
+    def build_suffix_from_selector(selector)
+      label = selector.gsub(/\W+/, '_')
+      label.gsub!(/^_|_$/, '')
+      label = 'selector-' + label
+      label
+    end
 
     def self.viewports(args)
       all = RSpec::PageRegression.viewports
@@ -58,13 +73,8 @@ module RSpec::PageRegression
       description_ancestry(metadata[:parent_example_group]) << metadata[:description].parameterize("_")
     end
 
-    def file_name(name, options = {})
-      #require 'byebug'
-      #byebug
-      filename = "#{name}"
-      filename = filename + "-#{options[:label]}" if options.key?(:label)
-      filename = filename + "-#{@viewport.name}" if RSpec::PageRegression.viewports.size > 1
-      filename + '.png'
+    def file_name(name, *suffixes)
+      filename = [name, *suffixes].join('-') + '.png'
     end
   end
 end
