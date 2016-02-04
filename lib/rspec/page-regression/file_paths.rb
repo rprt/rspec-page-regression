@@ -7,7 +7,7 @@ module RSpec::PageRegression
     attr_reader :difference_image
     attr_reader :viewport
 
-    def initialize(example, viewport)
+    def initialize(example, viewport, options = {})
       descriptions = description_ancestry(example.metadata[:example_group])
       descriptions.push example.description unless example.description.parameterize('_') =~ %r{
         ^
@@ -24,9 +24,9 @@ module RSpec::PageRegression
       cwd = Pathname.getwd
 
       @viewport = viewport
-      @reference_screenshot = (reference_root + canonical_path + file_name('expected')).relative_path_from(cwd)
-      @test_screenshot = (test_root + canonical_path + file_name('test')).relative_path_from cwd
-      @difference_image = (test_root + canonical_path + file_name('difference')).relative_path_from cwd
+      @reference_screenshot = (reference_root + canonical_path + file_name('expected', options)).relative_path_from(cwd)
+      @test_screenshot = (test_root + canonical_path + file_name('test', options)).relative_path_from cwd
+      @difference_image = (test_root + canonical_path + file_name('difference', options)).relative_path_from cwd
     end
 
     def all
@@ -35,7 +35,7 @@ module RSpec::PageRegression
 
     def self.responsive_file_paths(example, args)
       viewports(args).map do |viewport|
-        new(example, viewport)
+        new(example, viewport, args)
       end
     end
 
@@ -58,9 +58,13 @@ module RSpec::PageRegression
       description_ancestry(metadata[:parent_example_group]) << metadata[:description].parameterize("_")
     end
 
-    def file_name(name)
-      return "#{name}.png" unless RSpec::PageRegression.viewports.size > 1
-      "#{name}-#{@viewport.name}.png"
+    def file_name(name, options = {})
+      #require 'byebug'
+      #byebug
+      filename = "#{name}"
+      filename = filename + "-#{options[:label]}" if options.key?(:label)
+      filename = filename + "-#{@viewport.name}" if RSpec::PageRegression.viewports.size > 1
+      filename + '.png'
     end
   end
 end
