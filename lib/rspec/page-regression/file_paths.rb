@@ -7,7 +7,7 @@ module RSpec::PageRegression
     attr_reader :difference_image
     attr_reader :viewport
 
-    def initialize(example, viewport)
+    def initialize(example, viewport, options = {})
       descriptions = description_ancestry(example.metadata[:example_group])
       descriptions.push example.description unless example.description.parameterize('_') =~ %r{
         ^
@@ -24,9 +24,10 @@ module RSpec::PageRegression
       cwd = Pathname.getwd
 
       @viewport = viewport
-      @reference_screenshot = (reference_root + canonical_path + file_name('expected')).relative_path_from(cwd)
-      @test_screenshot = (test_root + canonical_path + file_name('test')).relative_path_from cwd
-      @difference_image = (test_root + canonical_path + file_name('difference')).relative_path_from cwd
+      suffixes = build_suffixes(options)
+      @reference_screenshot = (reference_root + canonical_path + file_name('expected', *suffixes)).relative_path_from(cwd)
+      @test_screenshot = (test_root + canonical_path + file_name('test', *suffixes)).relative_path_from cwd
+      @difference_image = (test_root + canonical_path + file_name('difference', *suffixes)).relative_path_from cwd
     end
 
     def all
@@ -35,12 +36,26 @@ module RSpec::PageRegression
 
     def self.responsive_file_paths(example, args)
       viewports(args).map do |viewport|
-        new(example, viewport)
+        new(example, viewport, args)
       end
     end
 
-
     private
+
+    def build_suffixes(args)
+      arr = []
+      arr << @viewport.name if RSpec::PageRegression.viewports.size > 1
+      arr << args[:label].to_s if args.key?(:label)
+      arr << build_suffix_from_selector(args[:selector]) if args.key?(:selector)
+      arr
+    end
+
+    def build_suffix_from_selector(selector)
+      label = selector.gsub(/\W+/, '_')
+      label.gsub!(/^_|_$/, '')
+      label = 'selector-' + label
+      label
+    end
 
     def self.viewports(args)
       all = RSpec::PageRegression.viewports
@@ -58,9 +73,8 @@ module RSpec::PageRegression
       description_ancestry(metadata[:parent_example_group]) << metadata[:description].parameterize("_")
     end
 
-    def file_name(name)
-      return "#{name}.png" unless RSpec::PageRegression.viewports.size > 1
-      "#{name}-#{@viewport.name}.png"
+    def file_name(name, *suffixes)
+      filename = [name, *suffixes].join('-') + '.png'
     end
   end
 end

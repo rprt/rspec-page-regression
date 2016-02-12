@@ -122,6 +122,35 @@ You can use `selector` option to specify area to match:
     end
 ```
 
+File name in this case will be "test-selector-foo.png"
+
+### Several screenshots within a single example
+
+If you try: 
+
+```ruby
+    require 'spec_helper'
+    
+    describe "my page", :type => :feature, :js => true do
+      background { visit my_page_path }
+      scenario "two conditions" do
+        expect(page).to match_reference_screenshot
+        ...
+        expect(page).to match_reference_screenshot
+      end
+    end
+```
+
+then you will have one test and one reference screenshots (after second call). To avoid it you can use `:label` option:
+
+```ruby
+    expect(page).to match_reference_screenshot(label: "one")
+    ...
+    expect(page).to match_reference_screenshot(label: "two")
+```
+
+Then you will have two different files "test-one.png" and "test-two.png" (and same for expectations)
+
 ### How do I create reference screenshots?
 
 The easiest way to create a reference screenshot is to run the test for the first time and let it fail.  You'll then get a failure message like:

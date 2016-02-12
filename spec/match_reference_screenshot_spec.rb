@@ -136,6 +136,33 @@ describe 'match_reference_screenshot' do
       Then { expect(@driver).to have_received(:save_screenshot).with(Pathname.new("tmp/spec/reference_screenshots/parent/#{file_name('test')}.png"), @opts) }
       Then { expect(@error.message).to include 'Missing reference screenshot spec/reference_screenshots/parent/expected' }
     end
+
+    context "with label option" do
+      Given { @args = { label: 'label' } }
+      Given do
+        RSpec::Core::Example.any_instance.stubs :metadata => {
+          file_path: __FILE__,
+          description: "Then expect(page).to match_reference_screenshot",
+          example_group: { description: "parent" }
+        }
+      end
+
+      Then { expect(@driver).to have_received(:save_screenshot).with(Pathname.new("tmp/spec/reference_screenshots/parent/test-label.png"), @opts) }
+    end
+
+    context "with selector option" do
+      Given { @args = { selector: 'a.link[data="@kill()"]'} }
+      Given do
+        RSpec::Core::Example.any_instance.stubs :metadata => {
+          file_path: __FILE__,
+          description: "Then expect(page).to match_reference_screenshot",
+          example_group: { description: "parent" }
+        }
+      end
+
+      Then { expect(@driver).to have_received(:save_screenshot).with(Pathname.new("tmp/spec/reference_screenshots/parent/test-selector-a_link_data_kill.png"),
+                                                                     selector: 'a.link[data="@kill()"]') }
+    end
   end
 
   context "using expect().to_not" do

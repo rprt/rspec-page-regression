@@ -21,4 +21,7 @@ RSpec.configure do |config|
   config.mock_with :mocha
   config.include Helpers
   config.raise_errors_for_deprecations!
+  config.after(:suite) do
+    FileUtils.rm_rf "#{File.dirname(__FILE__)}/reference_screenshots"
+  end
 end
