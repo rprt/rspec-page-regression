@@ -1,6 +1,5 @@
 sudo: false
 rvm:
-  - 1.9.3
-  - 2.1.0
-  - jruby
+  - 2.2.0
+  - jruby-head
 script: bundle exec rake spec_with_coveralls

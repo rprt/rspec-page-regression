@@ -16,3 +16,4 @@ spec/reference_screenshots
 test/tmp
 test/version_tmp
 tmp
+.byebug_history

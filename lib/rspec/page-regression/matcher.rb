@@ -9,10 +9,15 @@ module RSpec::PageRegression
 
       @responsive_filepaths = FilePaths.responsive_file_paths(RSpec.current_example, args)
 
-      opt = args.select { |k,_| RENDER_ARGS.include?(k) }
+      render_options = args.select { |k,_| RENDER_ARGS.include?(k) }
+      compare_options = {}
+      compare_options[:threshold] = args.fetch(:threshold, RSpec::PageRegression.threshold)
+      compare_options[:mode] = args.fetch(:mode, RSpec::PageRegression.mode)
+      compare_options[:include_rect] = args.fetch(:include_area, nil)
+      compare_options[:exclude_rect] = args.fetch(:exclude_rect, nil)
 
-      Renderer.render_responsive(page, @responsive_filepaths, opt)
-      @comparisons = @responsive_filepaths.map{ |filepaths| ImageComparison.new(filepaths) }
+      Renderer.render_responsive(page, @responsive_filepaths, render_options)
+      @comparisons = @responsive_filepaths.map{ |filepaths| ImageComparison.new(filepaths, compare_options) }
       @comparisons.each { |comparison| return false unless comparison.result == :match }
     end
 

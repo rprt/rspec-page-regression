@@ -151,6 +151,10 @@ then you will have one test and one reference screenshots (after second call). T
 
 Then you will have two different files "test-one.png" and "test-two.png" (and same for expectations)
 
+### Other options
+
+This gem uses [Imatcher](https://github.com/teachbase/imatcher) and you can use all its options in `match_reference_screenshot`
+
 ### How do I create reference screenshots?
 
 The easiest way to create a reference screenshot is to run the test for the first time and let it fail.  You'll then get a failure message like:

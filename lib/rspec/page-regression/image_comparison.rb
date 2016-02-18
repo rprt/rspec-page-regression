@@ -1,28 +1,24 @@
-if RUBY_PLATFORM == 'java'
-  require "chunky_png"
-else
-  require 'oily_png'
-end
+require 'imatcher'
 
 module RSpec::PageRegression
-
   class ImageComparison
-    include ChunkyPNG::Color
-
-    attr_reader :result
     attr_reader :filepaths
 
-    def initialize(filepaths)
+    def initialize(filepaths, compare_options)
       @filepaths = filepaths
-      @result = compare
+      @matcher = Imatcher::Matcher.new(compare_options)
     end
 
     def expected_size
-      [@iexpected.width , @iexpected.height]
+      [@iexpected.width, @iexpected.height]
     end
 
     def test_size
-      [@itest.width , @itest.height]
+      [@itest.width, @itest.height]
+    end
+
+    def result
+      @result ||= compare
     end
 
     private
@@ -33,56 +29,19 @@ module RSpec::PageRegression
       return :missing_reference_screenshot unless @filepaths.reference_screenshot.exist?
       return :missing_test_screenshot unless @filepaths.test_screenshot.exist?
 
-      @iexpected = ChunkyPNG::Image.from_file(@filepaths.reference_screenshot)
-      @itest = ChunkyPNG::Image.from_file(@filepaths.test_screenshot)
+      @iexpected = Imatcher::Image.from_file @filepaths.reference_screenshot
+      @itest = Imatcher::Image.from_file @filepaths.test_screenshot
 
-      return :size_mismatch if test_size != expected_size
-
-      return :match if pixels_match?
-
-      create_difference_image
-      return :difference
-    end
-
-    def pixels_match?
-      max_count = RSpec::PageRegression.threshold * @itest.width * @itest.height
-      count = 0
-      @itest.height.times do |y|
-        next if @itest.row(y) == @iexpected.row(y)
-        diff = @itest.row(y).zip(@iexpected.row(y)).select { |x, y| x != y }
-        count += diff.count
-        return false if count > max_count
-      end
-      return true
-    end
-
-    def create_difference_image
-      idiff = ChunkyPNG::Image.from_file(@filepaths.reference_screenshot)
-      xmin = @itest.width + 1
-      xmax = -1
-      ymin = @itest.height + 1
-      ymax = -1
-      @itest.height.times do |y|
-        @itest.row(y).each_with_index do |test_pixel, x|
-          idiff[x,y] = if test_pixel != (expected_pixel = idiff[x,y])
-                         xmin = x if x < xmin
-                         xmax = x if x > xmax
-                         ymin = y if y < ymin
-                         ymax = y if y > ymax
-                         rgb(
-                           (r(test_pixel) - r(expected_pixel)).abs,
-                           (g(test_pixel) - g(expected_pixel)).abs,
-                           (b(test_pixel) - b(expected_pixel)).abs
-                         )
-                       else
-                         rgb(0,0,0)
-                       end
-        end
+      begin
+        matcher_result = @matcher.compare(@iexpected, @itest)
+      rescue Imatcher::SizesMismatchError
+        return :size_mismatch
       end
 
-      idiff.rect(xmin-1,ymin-1,xmax+1,ymax+1,rgb(255,0,0))
+      return :match if matcher_result.match?
 
-      idiff.save @filepaths.difference_image
+      matcher_result.difference_image.save @filepaths.difference_image
+      :difference
     end
   end
 end

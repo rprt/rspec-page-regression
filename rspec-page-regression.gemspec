@@ -19,13 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'activesupport'
-
-  if RUBY_PLATFORM == 'java'
-    spec.add_dependency 'chunky_png'
-  else
-    spec.add_dependency 'oily_png'
-  end
-
+  spec.add_dependency 'imatcher', '~> 0.1.5'
   spec.add_dependency 'rspec', '~> 3.0'
   spec.add_dependency 'which_works'
 
