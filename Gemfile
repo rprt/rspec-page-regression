@@ -4,4 +4,5 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'awesome_print'
-gem 'byebug' if RUBY_VERSION >= "2.0.0" && RUBY_PLATFORM != 'java'
+gem 'byebug' if RUBY_VERSION >= '2.0.0' && RUBY_PLATFORM != 'java'
+gem 'imatcher', git: 'https://github.com/teachbase/imatcher.git', branch: :master
