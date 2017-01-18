@@ -6,7 +6,7 @@ require 'rspec/page-regression/version'
 require 'rspec/page-regression/viewport'
 
 module RSpec::PageRegression
-  RENDER_ARGS = [:selector, :full]
+  RENDER_ARGS  = [:selector, :full]
   ALLOWED_ARGS = [:viewport, :except_viewport, :label] + RENDER_ARGS
 
   def self.configure
@@ -14,11 +14,11 @@ module RSpec::PageRegression
   end
 
   def self.viewports=(viewports)
-    @@viewports = viewports.map{ |vp| Viewport.new(*vp) }
+    @@viewports = viewports.map { |vp| Viewport.new(*vp) }
   end
 
   def self.viewports
-    @@viewports ||= [ Viewport.new(:default, [1024, 768]) ]
+    @@viewports ||= [Viewport.new(:default, [1024, 768])]
   end
 
   def self.default_viewports=(defaults)
@@ -37,19 +37,19 @@ module RSpec::PageRegression
     @@threshold ||= 0.0
   end
 
-	def self.autoupdate_reference_screenshots= (autoupdate_reference_screenshots)
-		@@autoupdate_reference_screenshots = autoupdate_reference_screenshots
-	end
+  def self.autoupdate_reference_screenshots= (autoupdate_reference_screenshots)
+    @@autoupdate_reference_screenshots = autoupdate_reference_screenshots
+  end
 
-	def self.autoupdate_reference_screenshots
-		@@autoupdate_reference_screenshots ||= false
-	end
+  def self.autoupdate_reference_screenshots
+    @@autoupdate_reference_screenshots ||= false
+  end
 
-	def self.autocreate_reference_screenshots= (autocreate_reference_screenshots)
-		@@autocreate_reference_screenshots = autocreate_reference_screenshots
-	end
+  def self.autocreate_reference_screenshots= (autocreate_reference_screenshots)
+    @@autocreate_reference_screenshots = autocreate_reference_screenshots
+  end
 
-	def self.autocreate_reference_screenshots
-		@@autocreate_reference_screenshots ||= false
-	end  
+  def self.autocreate_reference_screenshots
+    @@autocreate_reference_screenshots ||= false
+  end
 end
