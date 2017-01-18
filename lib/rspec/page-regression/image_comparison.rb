@@ -30,56 +30,56 @@ module RSpec::PageRegression
     end
 
     def create_screenshot(command)
-			system command
-			puts "\nCreated missing image for you with:\n#{command}"
-		end
+      system command
+      puts "\nCreated missing image for you with:\n#{command}"
+    end
 
-		def handle_missing_screenshot(create_reference_screenshots, test_screenshot, reference_screenshot)
+    def handle_missing_screenshot(autocreate_reference_screenshots, test_screenshot, reference_screenshot)
       command = build_overwrite_command(test_screenshot, reference_screenshot)
-			if create_reference_screenshots
-				create_screenshot(command)
-			else
+      if autocreate_reference_screenshots
+        create_screenshot(command)
+      else
         puts "Create screenshots yourself with:\n#{command}"
-			end
-		end
+      end
+    end
 
-		def overwrite_existing_screenshot(test_screenshot, reference_screenshot)
+    def overwrite_existing_screenshot(test_screenshot, reference_screenshot)
       command = build_overwrite_command(test_screenshot, reference_screenshot)
       create_screenshot(command)
       puts "Updated existing screenshot #{reference_screenshot} for you."
     end
 
-		def compare
+    def compare
       test_screenshot      = @filepaths.test_screenshot
       reference_screenshot = @filepaths.reference_screenshot
       difference_image     = @filepaths.difference_image
 
-			if difference_image.exist?
-				difference_image.unlink
-				raise "Unlinking difference_image failed" if difference_image.exist?
-			end
+      if difference_image.exist?
+        difference_image.unlink
+        raise "Unlinking difference_image failed" if difference_image.exist?
+      end
 
-      update_reference_screenshots = RSpec::PageRegression.update_reference_screenshots
-      create_reference_screenshots = RSpec::PageRegression.create_reference_screenshots
+      autoupdate_reference_screenshots = RSpec::PageRegression.autoupdate_reference_screenshots
+      autocreate_reference_screenshots = RSpec::PageRegression.autocreate_reference_screenshots
 
-			if update_reference_screenshots
-				overwrite_existing_screenshot(test_screenshot, reference_screenshot)
-			elsif not reference_screenshot.exist?
-				handle_missing_screenshot(create_reference_screenshots, test_screenshot, reference_screenshot)
-			end
+      if autoupdate_reference_screenshots
+        overwrite_existing_screenshot(test_screenshot, reference_screenshot)
+      elsif not reference_screenshot.exist?
+        handle_missing_screenshot(autocreate_reference_screenshots, test_screenshot, reference_screenshot)
+      end
 
-			return :missing_reference_screenshot unless reference_screenshot.exist?
-			return :missing_test_screenshot      unless test_screenshot.exist?
+      return :missing_reference_screenshot unless reference_screenshot.exist?
+      return :missing_test_screenshot      unless test_screenshot.exist?
 
-			@iexpected = ChunkyPNG::Image.from_file(reference_screenshot)
-			@itest     = ChunkyPNG::Image.from_file(test_screenshot)
+      @iexpected = ChunkyPNG::Image.from_file(reference_screenshot)
+      @itest     = ChunkyPNG::Image.from_file(test_screenshot)
 
-			return :size_mismatch if test_size != expected_size
-			return :match         if pixels_match?
+      return :size_mismatch if test_size != expected_size
+      return :match         if pixels_match?
 
-			create_difference_image
-			return :difference
-		end
+      create_difference_image
+      return :difference
+    end
 
     def pixels_match?
       max_count = RSpec::PageRegression.threshold * @itest.width * @itest.height
@@ -107,9 +107,9 @@ module RSpec::PageRegression
                          ymin = y if y < ymin
                          ymax = y if y > ymax
                          rgb(
-                           (r(test_pixel) - r(expected_pixel)).abs,
-                           (g(test_pixel) - g(expected_pixel)).abs,
-                           (b(test_pixel) - b(expected_pixel)).abs
+                             (r(test_pixel) - r(expected_pixel)).abs,
+                             (g(test_pixel) - g(expected_pixel)).abs,
+                             (b(test_pixel) - b(expected_pixel)).abs
                          )
                        else
                          rgb(0,0,0)
