@@ -126,7 +126,7 @@ File name in this case will be "test-selector-foo.png"
 
 ### Several screenshots within a single example
 
-If you try: 
+RspecPageRegression names the screenshots (both reference and test) using the example/scenario name.  So if you try: 
 
 ```ruby
     require 'spec_helper'
@@ -141,15 +141,15 @@ If you try:
     end
 ```
 
-then you will have one test and one reference screenshots (after second call). To avoid it you can use `:label` option:
+then the two tests will collide since they both use filename "two_conditions.png" (and the second test will clobber the first test's files).  To avoid this, you can provide a `label` to use in the filename for a test.  For example, you could specify:
 
 ```ruby
-    expect(page).to match_reference_screenshot(label: "one")
+    expect(page).to match_reference_screenshot label: "one"
     ...
-    expect(page).to match_reference_screenshot(label: "two")
+    expect(page).to match_reference_screenshot label: "two"
 ```
 
-Then you will have two different files "test-one.png" and "test-two.png" (and same for expectations)
+And the tests will use filenames "two_conditions-one.png" and "two_conditions-two.png" respectively, and won't collide.
 
 ### How do I create reference screenshots?
 
