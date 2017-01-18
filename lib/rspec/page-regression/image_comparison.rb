@@ -10,7 +10,6 @@ module RSpec::PageRegression
     include ChunkyPNG::Color
 
     attr_reader :result
-    attr_reader :filepaths
 
     def initialize(filepaths)
       @filepaths = filepaths
@@ -26,23 +25,61 @@ module RSpec::PageRegression
     end
 
     private
-
-    def compare
-      @filepaths.difference_image.unlink if @filepaths.difference_image.exist?
-
-      return :missing_reference_screenshot unless @filepaths.reference_screenshot.exist?
-      return :missing_test_screenshot unless @filepaths.test_screenshot.exist?
-
-      @iexpected = ChunkyPNG::Image.from_file(@filepaths.reference_screenshot)
-      @itest = ChunkyPNG::Image.from_file(@filepaths.test_screenshot)
-
-      return :size_mismatch if test_size != expected_size
-
-      return :match if pixels_match?
-
-      create_difference_image
-      return :difference
+    def build_overwrite_command(test_screenshot, reference_screenshot)
+      "mkdir -p #{reference_screenshot.dirname} && cp #{test_screenshot} #{reference_screenshot}"
     end
+
+    def create_screenshot(command)
+			system command
+			puts "\nCreated missing image for you with:\n#{command}"
+		end
+
+		def handle_missing_screenshot(create_reference_screenshots, test_screenshot, reference_screenshot)
+      command = build_overwrite_command(test_screenshot, reference_screenshot)
+			if create_reference_screenshots
+				create_screenshot(command)
+			else
+        puts "Create screenshots yourself with:\n#{command}"
+			end
+		end
+
+		def overwrite_existing_screenshot(test_screenshot, reference_screenshot)
+      command = build_overwrite_command(test_screenshot, reference_screenshot)
+      create_screenshot(command)
+      puts "Updated existing screenshot #{reference_screenshot} for you."
+    end
+
+		def compare
+      test_screenshot      = @filepaths.test_screenshot
+      reference_screenshot = @filepaths.reference_screenshot
+      difference_image     = @filepaths.difference_image
+
+			if difference_image.exist?
+				difference_image.unlink
+				raise "Unlinking difference_image failed" if difference_image.exist?
+			end
+
+      update_reference_screenshots = RSpec::PageRegression.update_reference_screenshots
+      create_reference_screenshots = RSpec::PageRegression.create_reference_screenshots
+
+			if update_reference_screenshots
+				overwrite_existing_screenshot(test_screenshot, reference_screenshot)
+			elsif not reference_screenshot.exist?
+				handle_missing_screenshot(create_reference_screenshots, test_screenshot, reference_screenshot)
+			end
+
+			return :missing_reference_screenshot unless reference_screenshot.exist?
+			return :missing_test_screenshot      unless test_screenshot.exist?
+
+			@iexpected = ChunkyPNG::Image.from_file(reference_screenshot)
+			@itest     = ChunkyPNG::Image.from_file(test_screenshot)
+
+			return :size_mismatch if test_size != expected_size
+			return :match         if pixels_match?
+
+			create_difference_image
+			return :difference
+		end
 
     def pixels_match?
       max_count = RSpec::PageRegression.threshold * @itest.width * @itest.height
