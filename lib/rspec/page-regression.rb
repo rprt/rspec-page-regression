@@ -36,7 +36,7 @@ module RSpec::PageRegression
   def self.threshold
     @@threshold ||= 0.0
   end
-  
+
 	def self.autoupdate_reference_screenshots= (autoupdate_reference_screenshots)
 		@@autoupdate_reference_screenshots = autoupdate_reference_screenshots
 	end
