@@ -27,7 +27,7 @@ module RSpec::PageRegression
                   when :difference then "\nTest screenshot does not match reference screenshot\n"
                 end
 
-        msg += "    $ #{viewer} #{comparison.filepaths.all.select(&:exist?).join(' ')}\n"
+        msg += "    $ cd #{Pathname.getwd}; #{viewer} #{comparison.filepaths.all.select(&:exist?).join(' ')}\n"
 
         case comparison.result
         when :missing_reference_screenshot
