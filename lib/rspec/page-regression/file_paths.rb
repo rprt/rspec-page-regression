@@ -71,7 +71,7 @@ module RSpec::PageRegression
     def description_ancestry(metadata)
       return [] if metadata.nil?
 			description = metadata[:description]
-			description_parameterized = description.parameterize({separator: '-'})
+			description_parameterized = description.parameterize({separator: '_'})
       description_ancestry(metadata[:parent_example_group]) << description_parameterized
     end
 
