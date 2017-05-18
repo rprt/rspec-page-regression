@@ -9,14 +9,14 @@ module RSpec::PageRegression
 
     def initialize(example, viewport, options = {})
       descriptions = description_ancestry(example.metadata[:example_group])
-      descriptions.push example.description unless example.description.parameterize('_') =~ %r{
+      descriptions.push example.description unless example.description.parameterize(separator: '_') =~ %r{
         ^
         (then_+)?
         ( (expect_+) (page_+) (to_+) (not_+)? | (page_+) (should_+)? )
         match_reference_screenshot
         $
       }xi
-      canonical_path = descriptions.map{|s| s.parameterize('_')}.inject(Pathname.new(''), &:+)
+      canonical_path = descriptions.map{|s| s.parameterize(separator: '_')}.inject(Pathname.new(''), &:+)
 
       app_root = Pathname.new(example.metadata[:file_path]).realpath.each_filename.take_while{|c| c != 'spec'}.inject(Pathname.new('/'), &:+)
       reference_root = app_root + 'spec' + 'reference_screenshots'
@@ -70,7 +70,9 @@ module RSpec::PageRegression
 
     def description_ancestry(metadata)
       return [] if metadata.nil?
-      description_ancestry(metadata[:parent_example_group]) << metadata[:description].parameterize("_")
+			description = metadata[:description]
+			description_parameterized = description.parameterize({separator: '-'})
+      description_ancestry(metadata[:parent_example_group]) << description_parameterized
     end
 
     def file_name(name, *suffixes)
