@@ -30,24 +30,20 @@ module RSpec::PageRegression
       "mkdir -p #{reference_screenshot.dirname} && cp #{test_screenshot} #{reference_screenshot}"
     end
 
-    def create_screenshot(command)
-      system command
-      puts "\nCreated missing image for you with:\n#{command}"
-    end
-
     def handle_missing_screenshot(autocreate_reference_screenshots, test_screenshot, reference_screenshot)
-      command = build_overwrite_command(test_screenshot, reference_screenshot)
+      overwrite_command = build_overwrite_command(test_screenshot, reference_screenshot)
       if autocreate_reference_screenshots
-        create_screenshot(command)
-      else
-        puts "Create screenshots yourself with:\n#{command}"
+				puts "Creating missing screenshot #{reference_screenshot}"
+				system overwrite_command
+			else
+				puts "Create screenshot yourself with:\n#{overwrite_command}"
       end
     end
 
     def overwrite_existing_screenshot(test_screenshot, reference_screenshot)
-      command = build_overwrite_command(test_screenshot, reference_screenshot)
-      create_screenshot(command)
-      puts "Updated existing screenshot #{reference_screenshot} for you."
+      overwrite_command = build_overwrite_command(test_screenshot, reference_screenshot)
+			#puts "Updating existing screenshot #{reference_screenshot}"
+			system overwrite_command
     end
 
     def compare
@@ -63,9 +59,9 @@ module RSpec::PageRegression
       autoupdate_reference_screenshots = RSpec::PageRegression.autoupdate_reference_screenshots
       autocreate_reference_screenshots = RSpec::PageRegression.autocreate_reference_screenshots
 
-      if autoupdate_reference_screenshots
+      if reference_screenshot.exist? && autoupdate_reference_screenshots
         overwrite_existing_screenshot(test_screenshot, reference_screenshot)
-      elsif not reference_screenshot.exist?
+      else
         handle_missing_screenshot(autocreate_reference_screenshots, test_screenshot, reference_screenshot)
       end
 
